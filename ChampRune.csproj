@@ -1,0 +1,576 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{46056742-9B11-4AA9-A2BD-F02D886593AC}</ProjectGuid>
+    <OutputType>WinExe</OutputType>
+    <RootNamespace>ChampRune</RootNamespace>
+    <AssemblyName>ChampRune</AssemblyName>
+    <TargetFrameworkVersion>v4.8</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
+    <Deterministic>true</Deterministic>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="System" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Deployment" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Net.Http" />
+    <Reference Include="System.Windows.Forms" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Form1.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Form1.Designer.cs">
+      <DependentUpon>Form1.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Program.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="SavedItems.cs" />
+    <Compile Include="XMLSaveData.cs" />
+    <EmbeddedResource Include="Form1.resx">
+      <DependentUpon>Form1.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Properties\Resources.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <Compile Include="Properties\Resources.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Resources.resx</DependentUpon>
+      <DesignTime>True</DesignTime>
+    </Compile>
+    <None Include="Properties\Settings.settings">
+      <Generator>SettingsSingleFileGenerator</Generator>
+      <LastGenOutput>Settings.Designer.cs</LastGenOutput>
+    </None>
+    <Compile Include="Properties\Settings.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Settings.settings</DependentUpon>
+      <DesignTimeSharedInput>True</DesignTimeSharedInput>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="App.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Champ\" />
+    <Folder Include="Runes\" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="bin\Debug\Lains\bot.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="bin\Debug\Lains\jun.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="bin\Debug\Lains\mid.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="bin\Debug\Lains\sup.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="bin\Debug\Lains\top.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="bin\Debug\Lains\all_full_trans.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="bin\Debug\Champ\Alistar.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="bin\Debug\Champ\Amumu.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="bin\Debug\Champ\Anivia.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="bin\Debug\Champ\Annie.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="bin\Debug\Champ\Aphelios.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="bin\Debug\Champ\Ashe.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="bin\Debug\Champ\AurelionSol.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="bin\Debug\Champ\Azir.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="bin\Debug\Champ\Bard.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="bin\Debug\Champ\Blitzcrank.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="bin\Debug\Champ\Brand.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="bin\Debug\Champ\Braum.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="bin\Debug\Champ\Caitlyn.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="bin\Debug\Champ\Camille.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="bin\Debug\Champ\Cassiopeia.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="bin\Debug\Champ\Chogath.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="bin\Debug\Champ\Corki.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="bin\Debug\Champ\Darius.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="bin\Debug\Champ\Diana.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="bin\Debug\Champ\Draven.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="bin\Debug\Champ\DrMundo.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="bin\Debug\Champ\Ekko.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="bin\Debug\Champ\Elise.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="bin\Debug\Champ\Evelynn.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="bin\Debug\Champ\Ezreal.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="bin\Debug\Champ\Fiddlesticks.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="bin\Debug\Champ\Fiora.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="bin\Debug\Champ\Fizz.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="bin\Debug\Champ\Galio.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="bin\Debug\Champ\Gangplank.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="bin\Debug\Champ\Garen.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="bin\Debug\Champ\Gnar.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="bin\Debug\Champ\Gragas.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="bin\Debug\Champ\Graves.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="bin\Debug\Champ\Gwen.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="bin\Debug\Champ\Hecarim.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="bin\Debug\Champ\Heimerdinger.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="bin\Debug\Champ\Illaoi.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="bin\Debug\Champ\Irelia.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="bin\Debug\Champ\Ivern.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="bin\Debug\Champ\Janna.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="bin\Debug\Champ\JarvanIV.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="bin\Debug\Champ\Jax.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="bin\Debug\Champ\Jayce.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="bin\Debug\Champ\Jhin.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="bin\Debug\Champ\Jinx.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="bin\Debug\Champ\Kaisa.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="bin\Debug\Champ\Kalista.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="bin\Debug\Champ\Karma.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="bin\Debug\Champ\Karthus.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="bin\Debug\Champ\Kassadin.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="bin\Debug\Champ\Katarina.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="bin\Debug\Champ\Kayle.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="bin\Debug\Champ\Kayn.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="bin\Debug\Champ\Kennen.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="bin\Debug\Champ\Khazix.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="bin\Debug\Champ\Kindred.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="bin\Debug\Champ\Kled.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="bin\Debug\Champ\KogMaw.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="bin\Debug\Champ\Leblanc.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="bin\Debug\Champ\LeeSin.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="bin\Debug\Champ\Leona.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="bin\Debug\Champ\Lillia.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="bin\Debug\Champ\Lissandra.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="bin\Debug\Champ\Lucian.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="bin\Debug\Champ\Lulu.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="bin\Debug\Champ\Lux.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="bin\Debug\Champ\Malphite.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="bin\Debug\Champ\Malzahar.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="bin\Debug\Champ\Maokai.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="bin\Debug\Champ\MasterYi.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="bin\Debug\Champ\MissFortune.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="bin\Debug\Champ\Mordekaiser.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="bin\Debug\Champ\Morgana.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="bin\Debug\Champ\Nami.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="bin\Debug\Champ\Nasus.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="bin\Debug\Champ\Nautilus.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="bin\Debug\Champ\Neeko.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="bin\Debug\Champ\Nidalee.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="bin\Debug\Champ\Nocturne.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="bin\Debug\Champ\Nunu.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="bin\Debug\Champ\Olaf.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="bin\Debug\Champ\Orianna.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="bin\Debug\Champ\Ornn.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="bin\Debug\Champ\Pantheon.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="bin\Debug\Champ\Poppy.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="bin\Debug\Champ\Pyke.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="bin\Debug\Champ\Qiyana.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="bin\Debug\Champ\Quinn.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="bin\Debug\Champ\Rakan.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="bin\Debug\Champ\Rammus.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="bin\Debug\Champ\RekSai.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="bin\Debug\Champ\Rell.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="bin\Debug\Champ\Renekton.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="bin\Debug\Champ\Rengar.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="bin\Debug\Champ\Riven.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="bin\Debug\Champ\Rumble.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="bin\Debug\Champ\Ryze.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="bin\Debug\Champ\Samira.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="bin\Debug\Champ\Sejuani.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="bin\Debug\Champ\Senna.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="bin\Debug\Champ\Seraphine.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="bin\Debug\Champ\Sett.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="bin\Debug\Champ\Shaco.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="bin\Debug\Champ\Shen.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="bin\Debug\Champ\Shyvana.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="bin\Debug\Champ\Singed.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="bin\Debug\Champ\Sion.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="bin\Debug\Champ\Sivir.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="bin\Debug\Champ\Skarner.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="bin\Debug\Champ\Sona.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="bin\Debug\Champ\Soraka.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="bin\Debug\Champ\Swain.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="bin\Debug\Champ\Sylas.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="bin\Debug\Champ\Syndra.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="bin\Debug\Champ\TahmKench.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="bin\Debug\Champ\Taliyah.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="bin\Debug\Champ\Talon.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="bin\Debug\Champ\Taric.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="bin\Debug\Champ\Teemo.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="bin\Debug\Champ\Thresh.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="bin\Debug\Champ\Tristana.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="bin\Debug\Champ\Trundle.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="bin\Debug\Champ\Tryndamere.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="bin\Debug\Champ\TwistedFate.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="bin\Debug\Champ\Twitch.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="bin\Debug\Champ\Udyr.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="bin\Debug\Champ\Urgot.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="bin\Debug\Champ\Varus.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="bin\Debug\Champ\Vayne.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="bin\Debug\Champ\Veigar.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="bin\Debug\Champ\Velkoz.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="bin\Debug\Champ\Vi.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="bin\Debug\Champ\Viego.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="bin\Debug\Champ\Viktor.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="bin\Debug\Champ\Vladimir.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="bin\Debug\Champ\Volibear.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="bin\Debug\Champ\Warwick.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="bin\Debug\Champ\Wukong.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="bin\Debug\Champ\Xayah.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="bin\Debug\Champ\Xerath.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="bin\Debug\Champ\XinZhao.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="bin\Debug\Champ\Yasuo.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="bin\Debug\Champ\Yone.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="bin\Debug\Champ\Yorick.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="bin\Debug\Champ\Yuumi.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="bin\Debug\Champ\Zac.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="bin\Debug\Champ\Zed.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="bin\Debug\Champ\Ziggs.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="bin\Debug\Champ\Zilean.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="bin\Debug\Champ\Zoe.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="bin\Debug\Champ\Zyra.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="bin\Debug\Champ\Aatrox.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="bin\Debug\Champ\Ahri.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="bin\Debug\Champ\Akali.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="bin\Debug\Champ\Akshan.png" />
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+</Project>
