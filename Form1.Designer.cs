@@ -51,6 +51,7 @@ namespace ChampRune
             this.tbSize = new System.Windows.Forms.TextBox();
             this.llLinks = new System.Windows.Forms.LinkLabel();
             this.lblAuthor = new System.Windows.Forms.Label();
+            this.wbSearches = new System.Windows.Forms.WebBrowser();
             this.tcPages.SuspendLayout();
             this.tpRune.SuspendLayout();
             this.tpItems.SuspendLayout();
@@ -175,6 +176,7 @@ namespace ChampRune
             // 
             // tpRune
             // 
+            this.tpRune.Controls.Add(this.wbSearches);
             this.tpRune.Controls.Add(this.tcRuneLain);
             this.tpRune.Location = new System.Drawing.Point(4, 22);
             this.tpRune.Name = "tpRune";
@@ -318,6 +320,17 @@ namespace ChampRune
             this.lblAuthor.TabIndex = 17;
             this.lblAuthor.Text = "© Created by TutorialEu contact: support@tutorialeu.com";
             // 
+            // wbSearches
+            // 
+            this.wbSearches.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.wbSearches.Location = new System.Drawing.Point(3, 6);
+            this.wbSearches.MinimumSize = new System.Drawing.Size(20, 20);
+            this.wbSearches.Name = "wbSearches";
+            this.wbSearches.Size = new System.Drawing.Size(781, 414);
+            this.wbSearches.TabIndex = 1;
+            // 
             // frmMain
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -343,7 +356,7 @@ namespace ChampRune
             this.Controls.Add(this.lblSearch);
             this.Name = "frmMain";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
-            this.Text = "Champ Rune V002";
+            this.Text = "Champ Rune V005";
             this.WindowState = System.Windows.Forms.FormWindowState.Maximized;
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.frmMain_FormClosing);
             this.Load += new System.EventHandler(this.frmMain_Load);
@@ -380,6 +393,7 @@ namespace ChampRune
         private System.Windows.Forms.TextBox tbSize;
         private System.Windows.Forms.LinkLabel llLinks;
         private System.Windows.Forms.Label lblAuthor;
+        private System.Windows.Forms.WebBrowser wbSearches;
     }
 }
 

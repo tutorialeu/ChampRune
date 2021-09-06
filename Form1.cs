@@ -375,48 +375,6 @@ namespace ChampRune
             tcRuneLain.TabPages.Clear();
             tcItems.TabPages.Clear();
             int index = 0;
-            foreach (string lain in lains)
-            {
-                string page1 = btn.Name + lain;
-                string page2 = btn.Name + lain + "2";
-                if (runeList.Keys.Contains(page1))
-                {
-                    if (!tcRuneLain.TabPages.ContainsKey(lain))
-                    {
-                        TabPage tp = new TabPage();
-                        tp.Name = lain;
-                        tp.Text = lain;
-                        tp.Enabled = true;
-                        tp.BackgroundImage = Image.FromFile(runeList[page1]);
-                        tp.BackgroundImageLayout = ImageLayout.None;
-                        tcRuneLain.TabPages.Insert(tcRuneLain.TabPages.Count, tp);
-                        tcRuneLain.SelectedTab = tp;
-                    }
-                }
-
-                if (runeList2.Keys.Contains(page2))
-                {
-                    if (!tcItems.TabPages.ContainsKey(lain))
-                    {
-                        TabPage tp = new TabPage();
-                        tp.Name = lain;
-                        tp.Text = lain;
-                        tp.Enabled = true;
-                        tp.BackgroundImage = Image.FromFile(runeList2[page2]);
-                        tp.BackgroundImageLayout = ImageLayout.None;
-                        tcItems.TabPages.Insert(tcItems.TabPages.Count, tp);
-                        tcItems.SelectedTab = tp;
-                    }
-                }
-
-                index++;
-            }
-
-            tcItems.Show();
-            tcItems.Refresh();
-            tcRuneLain.Show();
-            tcRuneLain.Refresh();
-            tcPages.SelectedTab = tcPages.TabPages[1];
             if (btnTop.Enabled == false)
             {
                 SwitchTabToLain(lains[0]);
