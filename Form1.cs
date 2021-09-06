@@ -1,20 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
 using System.Diagnostics;
 using System.Drawing;
-using System.Drawing.Drawing2D;
-using System.Drawing.Text;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.IO;
-using System.Reflection;
-using System.Resources;
-using System.Runtime.InteropServices;
-using ChampRune.Properties;
+using Newtonsoft.Json;
 
 namespace ChampRune
 {
@@ -28,6 +19,7 @@ namespace ChampRune
         private int champWidth = 60;
         private int champHeight = 60;
         private int STACKS = 20;
+        private int selectedPatch = 0;
         private Graphics g;
         private string[] lains = { "TOP", "MID", "ADC", "JUN", "SUP" };
 
@@ -51,7 +43,7 @@ namespace ChampRune
             {"Ezreal", 49.28f},
             {"Caitlyn", 49.24f},
             {"Varus", 48.95f},
-            {"Kaisa", 48.85f},
+            {"KaiSa", 48.85f},
             {"Aphelios", 48.49f},
             {"Xayah", 48.21f},
             {"Kalista", 47.48f},
@@ -91,7 +83,7 @@ namespace ChampRune
             {"Mordekaiser", 50.51f},
             {"Jax", 50.47f},
             {"Kennen", 50.15f},
-            {"Chogath", 50.11f},
+            {"ChoGath", 50.11f},
             {"Riven", 50.00f},
             {"Poppy", 49.75f},
             {"Vayne", 49.74f},
@@ -134,7 +126,7 @@ namespace ChampRune
             {"Brand", 52.27f},
             {"Pyke", 51.94f},
             {"Anivia", 51.91f},
-            {"Velkoz", 51.91f},
+            {"VelKoz", 51.91f},
             {"Irelia", 51.82f},
             {"Yasuo", 51.53f},
             {"Malphite", 51.45f},
@@ -164,7 +156,7 @@ namespace ChampRune
             {"Vladimir", 49.92f},
             {"Zed", 49.70f},
             {"Viego", 49.56f},
-            {"Leblanc", 49.25f},
+            {"LeBlanc", 49.25f},
             {"Jayce", 49.04f},
             {"LeeSin", 48.74f},
             {"Sylas", 48.47f},
@@ -207,7 +199,7 @@ namespace ChampRune
             {"Sejuani", 50.17f},
             {"JarvanIV", 50.17f},
             {"Ekko", 49.96f},
-            {"Khazix", 49.94f},
+            {"KhaZix", 49.94f},
             {"Elise", 49.89f},
             {"Karthus", 49.73f},
             {"Ivern", 49.70f},
@@ -243,7 +235,7 @@ namespace ChampRune
             {"Blitzcrank", 51.78f},
             {"Xerath", 51.63f},
             {"Sona", 51.15f},
-            {"Velkoz", 51.14f},
+            {"VelKoz", 51.14f},
             {"Taric", 51.13f},
             {"Nami", 51.12f},
             {"Soraka", 51.09f},
@@ -284,13 +276,13 @@ namespace ChampRune
         {
             "Aatrox", "Ahri", "Akali", "Akshan", "Alistar", "Amumu", "Anivia", "Annie", "Aphelios", "Ashe",
             "AurelionSol", "Azir",
-            "Bard", "Blitzcrank", "Brand", "Braum", "Caitlyn", "Camille", "Cassiopeia", "Chogath", "Corki",
+            "Bard", "Blitzcrank", "Brand", "Braum", "Caitlyn", "Camille", "Cassiopeia", "ChoGath", "Corki",
             "Darius", "Diana", "Draven", "DrMundo", "Ekko", "Elise", "Evelynn", "Ezreal", "Fiddlesticks", "Fiora",
             "Fizz",
             "Galio", "Gangplank", "Garen", "Gnar", "Gragas", "Graves", "Gwen", "Hecarim", "Heimerdinger", "Illaoi",
-            "Irelia", "Ivern", "Janna", "JarvanIV", "Jax", "Jayce", "Jhin", "Jinx", "Kaisa", "Kalista", "Karma",
+            "Irelia", "Ivern", "Janna", "JarvanIV", "Jax", "Jayce", "Jhin", "Jinx", "KaiSa", "Kalista", "Karma",
             "Karthus", "Kassadin", "Katarina", "Kayle", "Kayn",
-            "Kennen", "Khazix", "Kindred", "Kled", "KogMaw", "Leblanc", "LeeSin", "Leona", "Lillia", "Lissandra",
+            "Kennen", "KhaZix", "Kindred", "Kled", "KogMaw", "LeBlanc", "LeeSin", "Leona", "Lillia", "Lissandra",
             "Lucian", "Lulu", "Lux", "Malphite", "Malzahar",
             "Maokai", "MasterYi", "MissFortune", "Mordekaiser", "Morgana", "Nami", "Nasus", "Nautilus", "Neeko",
             "Nidalee", "Nocturne", "Nunu", "Olaf", "Orianna",
@@ -300,17 +292,67 @@ namespace ChampRune
             "Sona", "Soraka", "Swain", "Sylas", "Syndra",
             "TahmKench", "Taliyah", "Talon", "Taric", "Teemo", "Thresh", "Tristana", "Trundle", "Tryndamere",
             "TwistedFate", "Twitch", "Udyr", "Urgot", "Varus", "Vayne",
-            "Veigar", "Velkoz", "Vi", "Viego", "Viktor", "Vladimir", "Volibear", "Warwick", "Wukong", "Xayah", "Xerath",
+            "Veigar", "VelKoz", "Vi", "Viego", "Viktor", "Vladimir", "Volibear", "Warwick", "Wukong", "Xayah", "Xerath",
             "XinZhao", "Yasuo", "Yone", "Yorick", "Yuumi", "Zac",
             "Zed", "Ziggs", "Zilean", "Zoe", "Zyra"
         };
+
+        private bool init = false;
 
         public frmMain()
         {
             this.Cursor = Cursors.WaitCursor;
             InitializeComponent();
+            init = true;
+            try
+            {
+                SavedItems si = XMLSaveData.DeserializeToObject<SavedItems>(Path.GetDirectoryName(workingDirectory) + @"\\save.data");
+                tbSize.Text = si.size.ToString();
+                nudStack.Value = decimal.Parse(si.stack.ToString());
+                selectedPatch = si.patch;
+                cbPatch.SelectedIndex = si.patch;
+            }
+            catch
+            {
+                SavedItems si = new SavedItems();
+                si.size = 60;
+                si.stack = 20;
+                si.patch = 1;
+                tbSize.Text = "60";
+                nudStack.Value = 20;
+                selectedPatch = si.patch;
+                cbPatch.SelectedIndex = 1;
+                XMLSaveData.SerializeToXml(si, Path.GetDirectoryName(workingDirectory) + @"\\save.data");
+            }
+            init = false;
+            LoadPach();
+        }
+
+        void LoadPach()
+        {
+            if (tpChamp.Controls.Count > 0)
+            {
+                tpChamp.Controls.Clear();
+            }
+
             DirectoryInfo champDir = new DirectoryInfo(Path.GetDirectoryName(workingDirectory) + @"\Champ\");
-            DirectoryInfo runesDir = new DirectoryInfo(Path.GetDirectoryName(workingDirectory) + @"\Runes115\");
+            DirectoryInfo runesDir = null;
+            if (cbPatch.SelectedIndex == 0)
+            {
+                runesDir = new DirectoryInfo(Path.GetDirectoryName(workingDirectory) + @"\Runes115\");
+                selectedPatch = cbPatch.SelectedIndex;
+            }
+            else if (cbPatch.SelectedIndex == 1)
+            {
+                runesDir = new DirectoryInfo(Path.GetDirectoryName(workingDirectory) + @"\Runes116\");
+                selectedPatch = cbPatch.SelectedIndex;
+            }
+            else if (cbPatch.SelectedIndex == 2)
+            {
+                runesDir = new DirectoryInfo(Path.GetDirectoryName(workingDirectory) + @"\Runes117\");
+                selectedPatch = cbPatch.SelectedIndex;
+            }
+
             FileInfo[] fChamp = champDir.GetFiles("*.png");
             champList = new Dictionary<string, Button>();
             runeList = new Dictionary<string, string>();
@@ -319,6 +361,8 @@ namespace ChampRune
             tpChamp.AutoSize = true;
             tpChamp.AutoScroll = true;
             int locX = 0, locY = 0;
+            champWidth = champHeight = int.Parse(tbSize.Text);
+            STACKS = int.Parse(nudStack.Value.ToString());
             foreach (var file in fChamp)
             {
                 Button b = new Button();
@@ -345,7 +389,7 @@ namespace ChampRune
                 champList.Add(ChampName, b);
             }
 
-            FileInfo[] fRune = runesDir.GetFiles("*.png");
+            FileInfo[] fRune = runesDir.GetFiles("*.jpg");
             foreach (var file in fRune)
             {
                 if (file.Name.Split('_')[1].EndsWith("2"))
@@ -366,6 +410,9 @@ namespace ChampRune
             }
 
             g = this.CreateGraphics();
+            SwitchToAllChamps();
+            UpdatePicSize();
+            readPatchListNames();
         }
 
         private void Btn_Click(object sender, EventArgs e)
@@ -460,7 +507,7 @@ namespace ChampRune
             Brush b = new SolidBrush(Color.Black);
             Font drawFont = new Font("Arial", 16);
             g.Clear(SystemColors.Control);
-            g.DrawString(message, drawFont, b, 360, 60);
+            g.DrawString(message, drawFont, b, 562, 36);
         }
 
         private void Btn_MouseHover(object sender, EventArgs e)
@@ -508,34 +555,86 @@ namespace ChampRune
             }
         }
 
+        private void readPatchListNames()
+        {
+            string selItem = cbPatch.SelectedItem.ToString().Trim();
+            string pathToJson = Path.GetDirectoryName(workingDirectory) + @"\WIN_RATE.data";
+            string[] readLines = File.ReadAllLines(pathToJson);
+            bool read = false;
+            int lainType = 0;
+            adcListNames.Clear();
+            topListNames.Clear();
+            midListNames.Clear();
+            junListNames.Clear();
+            supListNames.Clear();
+            foreach (string line in readLines)
+            {
+                if (selItem == line.Trim().Split(':')[0])
+                {
+                    read = true;
+                    continue;
+                }
+                if (lains.Contains(line.Trim().Split(':')[0]))
+                {
+                    int i = 1;
+                    foreach (string type in lains)
+                    {
+                        if (type == line.Trim().Split(':')[0])
+                        {
+                            lainType = i;
+                            break;
+                        }
+                        i++;
+                    }
+                    continue;
+                }
+
+                if (line.Trim() == "")
+                {
+                    read = false;
+                }
+
+                if (read)
+                {
+                    if (lainType == 1) // TOP
+                    {
+                        topListNames.Add(line.Trim().Split(':')[0], float.Parse(line.Trim().Split(':')[1]));
+                    }
+                    else
+                    if (lainType == 2) // MID
+                    {
+                        midListNames.Add(line.Trim().Split(':')[0], float.Parse(line.Trim().Split(':')[1]));
+                    }
+                    else
+                        if (lainType == 3) // ADC
+                    {
+                        adcListNames.Add(line.Trim().Split(':')[0], float.Parse(line.Trim().Split(':')[1]));
+                    }
+                    else
+                        if (lainType == 4) // JUN
+                    {
+                        junListNames.Add(line.Trim().Split(':')[0], float.Parse(line.Trim().Split(':')[1]));
+                    }
+                    else
+                        if (lainType == 5) // SUP
+                    {
+                        supListNames.Add(line.Trim().Split(':')[0], float.Parse(line.Trim().Split(':')[1]));
+                    }
+                }
+            }
+        }
+
         private void frmMain_Load(object sender, EventArgs e)
         {
             btnAll.Enabled = false;
             tbSearch.Focus();
-            cbPatch.SelectedIndex = 0;
             tcItems.SelectedIndexChanged += TcItems_SelectedIndexChanged;
             tcRuneLain.SelectedIndexChanged += TcRuneLain_SelectedIndexChanged;
             tbSize.Text = champWidth.ToString();
             this.Cursor = Cursors.Default;
-            try
-            {
-                SavedItems si = XMLSaveData.DeserializeToObject<SavedItems>(Path.GetDirectoryName(workingDirectory) + @"\\save.data");
-                tbSize.Text = si.size.ToString();
-                nudStack.Value = decimal.Parse(si.stack.ToString());
-                UpdatePicSize();
-                SwitchToAllChamps();
-            }
-            catch
-            {
-                SavedItems si = new SavedItems();
-                si.size = 60;
-                si.stack = 20;
-                tbSize.Text = "60";
-                nudStack.Value = 20;
-                XMLSaveData.SerializeToXml(si, Path.GetDirectoryName(workingDirectory) + @"\\save.data");
-                UpdatePicSize();
-                SwitchToAllChamps();
-            }
+            this.FormBorderStyle = FormBorderStyle.Sizable;
+            this.AutoScroll = false;
+            //Path.GetDirectoryName(workingDirectory) + @"\WIN_RATE.json"
         }
 
         void UpdateSavedFile()
@@ -545,6 +644,7 @@ namespace ChampRune
                 SavedItems si = new SavedItems();
                 si.size = int.Parse(tbSize.Text);
                 si.stack = int.Parse(nudStack.Value.ToString());
+                si.patch = cbPatch.SelectedIndex;
                 XMLSaveData.SerializeToXml(si, Path.GetDirectoryName(workingDirectory) + @"\\save.data");
             }
             catch
@@ -552,6 +652,7 @@ namespace ChampRune
                 SavedItems si = new SavedItems();
                 si.size = 60;
                 si.stack = 20;
+                si.patch = 1;
                 XMLSaveData.SerializeToXml(si, Path.GetDirectoryName(workingDirectory) + @"\\save.data");
             }
         }
@@ -656,7 +757,8 @@ namespace ChampRune
             btnAdc.Enabled = true;
             btnJun.Enabled = true;
             btnSup.Enabled = true;
-            llLinks.Text = @"https://tutorialeu.com/lol15/#top";
+            string name = cbPatch.SelectedItem.ToString().Trim().ToLower().Split('.')[1];
+            llLinks.Text = @"https://tutorialeu.com/lol" + name + @"/#top";
             tcPages.SelectedTab = tcPages.TabPages[0];
             tbSearch.Focus();
             List<string> elements = new List<string>();
@@ -676,7 +778,8 @@ namespace ChampRune
             btnTop.Enabled = true;
             btnJun.Enabled = true;
             btnSup.Enabled = true;
-            llLinks.Text = @"https://tutorialeu.com/lol15/#mid";
+            string name = cbPatch.SelectedItem.ToString().Trim().ToLower().Split('.')[1];
+            llLinks.Text = @"https://tutorialeu.com/lol" + name + @"/#mid";
             tcPages.SelectedTab = tcPages.TabPages[0];
             tbSearch.Focus();
             List<string> elements = new List<string>();
@@ -695,7 +798,8 @@ namespace ChampRune
             btnTop.Enabled = true;
             btnJun.Enabled = true;
             btnSup.Enabled = true;
-            llLinks.Text = @"https://tutorialeu.com/lol15/#adc";
+            string name = cbPatch.SelectedItem.ToString().Trim().ToLower().Split('.')[1];
+            llLinks.Text = @"https://tutorialeu.com/lol" + name + @"/#adc";
             tcPages.SelectedTab = tcPages.TabPages[0];
             tbSearch.Focus();
             List<string> elements = new List<string>();
@@ -714,7 +818,8 @@ namespace ChampRune
             btnAll.Enabled = true;
             btnTop.Enabled = true;
             btnSup.Enabled = true;
-            llLinks.Text = @"https://tutorialeu.com/lol15/#jun";
+            string name = cbPatch.SelectedItem.ToString().Trim().ToLower().Split('.')[1];
+            llLinks.Text = @"https://tutorialeu.com/lol" + name + @"/#jun";
             tcPages.SelectedTab = tcPages.TabPages[0];
             List<string> elements = new List<string>();
             foreach (KeyValuePair<string, float> vals in junListNames.OrderByDescending(key => key.Value))
@@ -733,7 +838,8 @@ namespace ChampRune
             btnMid.Enabled = true;
             btnAll.Enabled = true;
             btnTop.Enabled = true;
-            llLinks.Text = @"https://tutorialeu.com/lol15/#sup";
+            string name = cbPatch.SelectedItem.ToString().Trim().ToLower().Split('.')[1];
+            llLinks.Text = @"https://tutorialeu.com/lol" + name + @"/#sup";
             tcPages.SelectedTab = tcPages.TabPages[0];
             List<string> elements = new List<string>();
             foreach (KeyValuePair<string, float> vals in supListNames.OrderByDescending(key => key.Value))
@@ -760,6 +866,7 @@ namespace ChampRune
             {
                 champList[key].Visible = true;
                 champList[key].Location = new Point(locX, locY);
+                champList[key].Refresh();
                 if (locX + champList[key].Width < champWidth * STACKS)
                 {
                     locX += champList[key].Width;
@@ -809,48 +916,61 @@ namespace ChampRune
 
         private void cbPatch_SelectedIndexChanged(object sender, EventArgs e)
         {
-            if (cbPatch.SelectedIndex != 0)
+            if (cbPatch.SelectedIndex != selectedPatch)
             {
-                MessageBox.Show(this, "Patch not added yet!");
-                cbPatch.SelectedIndex = 0;
+                LoadPach();
+
             }
         }
 
         private void nudStack_ValueChanged(object sender, EventArgs e)
         {
-            STACKS = int.Parse(nudStack.Value.ToString());
-            SwitchToAllChamps();
-            UpdateSavedFile();
+            if (!init)
+            {
+                STACKS = int.Parse(nudStack.Value.ToString());
+                SwitchToAllChamps();
+                UpdateSavedFile();
+            }
         }
         private void tbSize_KeyDown(object sender, KeyEventArgs e)
         {
 
             if (e.KeyCode == Keys.Enter)
             {
-                int val;
-                try
-                {
-                    val = int.Parse(tbSize.Text);
+                SwitchToAllChamps();
+                ValidateInputSize();
 
-                }
-                catch (Exception ex)
-                {
-                    MessageBox.Show(this, "You haven't entered a valid size: " + ex.Message);
-                    return;
-                }
-
-                if (val >= 60 && val <= 100)
-                {
-                    UpdatePicSize();
-                    SwitchToAllChamps();
-                    UpdateSavedFile();
-                }
-                else
-                {
-                    MessageBox.Show(this, "Try a value between 60 and 100");
-                }
             }
         }
+
+        void ValidateInputSize()
+        {
+            int val;
+            try
+            {
+                val = int.Parse(tbSize.Text);
+
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(this, "You haven't entered a valid size: " + ex.Message);
+                tbSize.Text = "60";
+                return;
+            }
+
+            if (val >= 60 && val <= 100)
+            {
+                UpdatePicSize();
+                SwitchToAllChamps();
+                UpdateSavedFile();
+            }
+            else
+            {
+                MessageBox.Show(this, "Try a value between 60 and 100");
+                tbSize.Text = "60";
+            }
+        }
+
         void UpdatePicSize()
         {
             champWidth = int.Parse(tbSize.Text);
@@ -872,7 +992,13 @@ namespace ChampRune
 
         private void frmMain_FormClosing(object sender, FormClosingEventArgs e)
         {
+            ValidateInputSize();
             UpdateSavedFile();
+        }
+
+        private void tbSize_TextChanged(object sender, EventArgs e)
+        {
+
         }
     }
 }
