@@ -11,5 +11,6 @@ namespace ChampRune
     {
         public int stack;
         public int size;
+        public int patch;
     }
 }
