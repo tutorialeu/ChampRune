@@ -118,22 +118,85 @@
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <assembly alias="System.Windows.Forms" name="System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
-  <data name="jun" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\bin\Debug\Lains\jun.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  <data name="all_full_trans" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\all_full_trans.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
-  <data name="sup" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\bin\Debug\Lains\sup.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  <data name="All_Ranks" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\All_Ranks.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="ARAM" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\ARAM.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
   <data name="bot" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\bin\Debug\Lains\bot.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+    <value>..\Resources\bot.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="ChampRune" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\ChampRune.ico;System.Drawing.Icon, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="Emblem_Bronze" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\Emblem_Bronze.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="Emblem_Challenger" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\Emblem_Challenger.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="Emblem_Diamond" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\Emblem_Diamond.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="Emblem_Diamond_2_Plus" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\Emblem_Diamond_2_Plus.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="Emblem_Diamond_Plus" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\Emblem_Diamond_Plus.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="Emblem_Gold" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\Emblem_Gold.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="Emblem_Grandmaster" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\Emblem_Grandmaster.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="Emblem_Iron" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\Emblem_Iron.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="Emblem_Master" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\Emblem_Master.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="Emblem_Master_Plus" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\Emblem_Master_Plus.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="Emblem_Platinum" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\Emblem_Platinum.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="Emblem_Platinum_Plus" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\Emblem_Platinum_Plus.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="Emblem_Silver" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\Emblem_Silver.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="jun" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\jun.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
   <data name="mid" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\bin\Debug\Lains\mid.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+    <value>..\Resources\mid.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="Normal_Blind" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\Normal Blind.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="Normal_Draft" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\Normal Draft.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="Ranked_Flex" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\Ranked Flex.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="Ranked_Solo" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\Ranked Solo.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="sup" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\sup.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
   <data name="top" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\bin\Debug\Lains\top.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+    <value>..\Resources\top.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
-  <data name="all_full_trans" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\bin\Debug\Lains\all_full_trans.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  <data name="yasuo_background" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\yasuo_background.jpg;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
 </root>

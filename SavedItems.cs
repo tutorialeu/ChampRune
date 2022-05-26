@@ -1,8 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace ChampRune
 {
@@ -11,6 +7,14 @@ namespace ChampRune
     {
         public int stack;
         public int size;
-        public int patch;
+        public string patch;
+        public int type;
+        public int rank;
+        public int x;
+        public int y;
+        public int width;
+        public int height;
+        public string background;
+        public string region;
     }
 }
