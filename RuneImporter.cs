@@ -19,6 +19,7 @@ namespace ChampRune
         int SLEEP_THREE = 1000;
         bool stop_actions = false;
         Point formLocation;
+        IntPtr lolWindow;
 
 
         string[] keyStones = { "Precision", "Domination", "Sorcery", "Resolve", "Inspiration" };
@@ -183,13 +184,14 @@ namespace ChampRune
         const int MYACTION_HOTKEY_ID = 1;
         private void click(int x, int y)
         {
+            SetForegroundWindow(lolWindow);
             RECT rct = new RECT();
             GetWindowRect(GetForegroundWindow(), ref rct);
             //Gives me position of window
             //1600x900 is the window size that I have created this in.
             //I need to scale the given points by the current window size
             //Ratio of 1600:current?
-            Point pt = new Point(x * (rct.Right - rct.Left) / 1600 + rct.Left, y * (rct.Bottom - rct.Top) / 900 + rct.Top);
+            Point pt = new Point(x * (rct.Right - rct.Left) / 1580 + rct.Left, y * (rct.Bottom - rct.Top) / 900 + rct.Top);
             Cursor.Position = pt;
             System.Threading.Thread.Sleep(SLEEP_ONE);
             uint X = (uint)Cursor.Position.X;
@@ -265,7 +267,7 @@ namespace ChampRune
         {
             MouseEventArgs me = e as MouseEventArgs;
             Process[] processlist = Process.GetProcesses();
-            IntPtr h = IntPtr.Zero;
+            lolWindow = IntPtr.Zero;
             bool ClientOppened = false;
             foreach (Process process in processlist)
             {
@@ -274,7 +276,7 @@ namespace ChampRune
                     //Console.WriteLine("Process: {0} ID: {1} Window title: {2}", process.ProcessName, process.Id, process.MainWindowTitle);
                     if (process.ProcessName == "LeagueClientUx")
                     {
-                        h = process.MainWindowHandle;
+                        lolWindow = process.MainWindowHandle;
                         ClientOppened = true;
                         break;
                     }
@@ -311,7 +313,7 @@ namespace ChampRune
             InterceptKeys.Start();
             //IntPtr h = FindWindow(null, "LeagueClientUx");
             //Console.WriteLine("Hi: " + h.ToString());
-            SetForegroundWindow(h);
+            SetForegroundWindow(lolWindow);
             System.Threading.Thread.Sleep(SLEEP_ONE);
             bool runePageSelected = false;
             //Precision
@@ -342,12 +344,12 @@ namespace ChampRune
             if (cbAutoImportSpells.Checked)
             {
                 // spell 1 auto select
-                click(864, 853);
+                click(874, 853);
                 System.Threading.Thread.Sleep(SLEEP_ONE);
 
                 SelectSpell(lblSpell1.Text);
                 // spell 2 auto select
-                click(923, 853);
+                click(933, 853);
                 System.Threading.Thread.Sleep(SLEEP_ONE);
                 SelectSpell(lblSpell2.Text);
             }
@@ -358,7 +360,8 @@ namespace ChampRune
                     stop_actions = false;
                     return;
                 }
-                click(553, 853);
+                System.Threading.Thread.Sleep(SLEEP_ONE);
+                click(564, 853);
                 System.Threading.Thread.Sleep(SLEEP_THREE);
             }
             //fixRuneSelectionBug();
@@ -710,7 +713,7 @@ namespace ChampRune
                     stop_actions = false;
                     return;
                 }
-                click(636, 157);
+                click(890, 157);
                 System.Threading.Thread.Sleep(SLEEP_TWO);
                 if (stop_actions)
                 {
