@@ -101,7 +101,7 @@ namespace ChampRune
             )
         {
             InitializeComponent();
-            leagueClient = new LeagueClient();
+            leagueClient = new LeagueClient(LeagueClient.credentials.lockfile);
             RuneTitle.Text = keyStoneTitle;
             ChangeTextColorByRune(keyStoneTitle, RuneTitle);
             Rune1.Text = keyStone1;

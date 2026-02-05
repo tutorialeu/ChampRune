@@ -10,6 +10,10 @@ using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices;
 using System.Text.RegularExpressions;
+using Newtonsoft.Json.Linq;
+using System.Net.Http;
+using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.Xml.XPath;
@@ -386,7 +390,14 @@ namespace ChampRune
             CefSettings settings = new CefSettings();
             var cachePath = Path.GetDirectoryName(workingDirectory) + @"\cache";
             var cacheExist = Directory.Exists(cachePath);
-            settings.CefCommandLineArgs["disable-features"] += ",SameSiteByDefaultCookies";
+            if (settings.CefCommandLineArgs.ContainsKey("disable-features"))
+            {
+                settings.CefCommandLineArgs["disable-features"] += ",SameSiteByDefaultCookies";
+            }
+            else
+            {
+                settings.CefCommandLineArgs.Add("disable-features", "SameSiteByDefaultCookies");
+            }
             settings.CachePath = cachePath;
             settings.LogSeverity = LogSeverity.Fatal;
             Cef.Initialize(settings);
@@ -416,13 +427,9 @@ namespace ChampRune
                 pnWeb.Visible = false;
             }
             pnWeb.BringToFront();
-            leagueClient = new LeagueClient();
+            leagueClient = new LeagueClient(LeagueClient.credentials.lockfile);
             if (!leagueClient.IsConnected)
             {
-                /*
-                new FormMessage("Import Client Runes Warning!", "The league of legends client is not detected!" +
-                    "\nOpen league client before auto import runes!", this.Right - this.Width / 2, this.Bottom - this.Height / 2).ShowDialog();
-                */
                 lblPhase.Text = "Phase: Client Offline";
             }
             else
@@ -431,7 +438,9 @@ namespace ChampRune
                 leagueClient.OnDisconnected += LeagueClient_OnDisconnected;
                 leagueClient.OnWebsocketEvent += LeagueClient_OnWebsocketEvent;
                 leagueClient.Subscribe("/lol-gameflow/v1/gameflow-phase", GameFlowPhase);
+                leagueClient.Subscribe("/lol-champ-select/v1/session", ChampSelectEvent);
             }
+            _ = SyncChampionsWithRiot();
         }
         void FirstSendToBackElements()
         {
@@ -823,7 +832,7 @@ namespace ChampRune
                 });
                 if (uploadChampions)
                 {
-                    UpdateChampions();
+                    // UpdateChampions(); // Disabled in favor of SyncChampionsWithRiot
                     uploadChampions = false;
                 }
             }
@@ -1056,6 +1065,144 @@ namespace ChampRune
                 UpdatePicSize();
                 EnableAllConstrols();
                 this.Cursor = Cursors.Default;
+            }
+        }
+
+        private async Task SyncChampionsWithRiot()
+        {
+            try
+            {
+                using (HttpClient client = new HttpClient())
+                {
+                    // 1. Aflăm ultima versiune de patch
+                    var versions = await client.GetStringAsync("https://ddragon.leagueoflegends.com/api/versions.json");
+                    string latest = Newtonsoft.Json.Linq.JArray.Parse(versions)[0].ToString();
+
+                    // 2. Descărcăm datele campionilor
+                    var json = await client.GetStringAsync($"https://ddragon.leagueoflegends.com/cdn/{latest}/data/en_US/champion.json");
+                    var data = Newtonsoft.Json.Linq.JObject.Parse(json)["data"];
+
+                    champions = new Dictionary<string, Champion>();
+                    int locX = 0, locY = DEFAULT_BUTTON_LOCATION;
+                    champWidth = champHeight = int.Parse(tbSize.Text);
+                    STACKS = int.Parse(nudStack.Value.ToString());
+
+                    foreach (var champ in (JObject)data)
+                    {
+                        string name = champ.Key.ToString();
+                        string keyId = champ.Value["key"].ToString();
+
+                        PictureBox b = new PictureBox();
+                        b.WaitOnLoad = false;
+                        b.SizeMode = PictureBoxSizeMode.StretchImage;
+                        b.BackgroundImageLayout = ImageLayout.Stretch;
+                        b.Size = new Size(champWidth, champHeight);
+                        b.Location = new Point(locX, locY);
+                        b.Name = name;
+                        b.MouseHover += Btn_MouseHover;
+                        b.MouseClick += Btn_Champion_Click_Event;
+                        b.MouseEnter += B_MouseEnter;
+
+                        if (locX + b.Width < champWidth * STACKS)
+                        {
+                            locX += b.Width;
+                        }
+                        else
+                        {
+                            locX = 0;
+                            locY += b.Height;
+                        }
+
+                        champions.Add(name, new Champion
+                        {
+                            name = name,
+                            id = keyId,
+                            image = b,
+                            imagePath = $"https://ddragon.leagueoflegends.com/cdn/{latest}/img/champion/{name}.png"
+                        });
+                    }
+
+                    this.Invoke((MethodInvoker)delegate
+                    {
+                        UpdateWithImagesFromUGG();
+                        this.Cursor = Cursors.Default;
+                    });
+                }
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine("Error syncing champions: " + ex.Message);
+            }
+        }
+
+        private async Task<List<int>> GetRunesFromUgg(string champName)
+        {
+            try
+            {
+                using (HttpClient client = new HttpClient())
+                {
+                    client.DefaultRequestHeaders.Add("User-Agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64)");
+
+                    string url = $"https://u.gg/lol/champions/{champName.ToLower()}/build";
+                    string html = await client.GetStringAsync(url);
+
+                    string pattern = @"(?<=""selectedPerks"":\[).*?(?=\])";
+                    var match = Regex.Match(html, pattern);
+
+                    if (match.Success)
+                    {
+                        return match.Value.Split(',')
+                                          .Select(id => int.Parse(id.Trim()))
+                                          .ToList();
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine("Error fetching runes: " + ex.Message);
+            }
+            return null;
+        }
+
+        private async void AutoApplyRunes(string name)
+        {
+            var runes = await GetRunesFromUgg(name);
+            if (runes != null)
+            {
+                Debug.WriteLine($"Found runes for {name}: {string.Join(", ", runes)}");
+                // Application logic via LCU could be added here
+            }
+        }
+
+        private void ChampSelectEvent(OnWebsocketEventArgs e)
+        {
+            try
+            {
+                var data = JObject.Parse(e.Data);
+                var myCellId = data["localPlayerCellId"]?.ToString();
+                var actions = data["actions"];
+
+                if (myCellId == null || actions == null) return;
+
+                foreach (var actionGroup in actions)
+                {
+                    foreach (var action in actionGroup)
+                    {
+                        if (action["actorCellId"]?.ToString() == myCellId && (bool)action["completed"])
+                        {
+                            string champId = action["championId"]?.ToString();
+                            var champ = champions.Values.FirstOrDefault(c => c.id == champId);
+                            if (champ != null)
+                            {
+                                Task.Run(() => AutoApplyRunes(champ.name));
+                            }
+                        }
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine("Error in ChampSelectEvent: " + ex.Message);
             }
         }
         private void BtnUpdateRune_Click(object sender, System.EventArgs e)
