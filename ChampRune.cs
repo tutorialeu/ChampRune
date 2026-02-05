@@ -58,6 +58,12 @@ namespace ChampRune
         ThemeSelector themeSelector;
         RuneImporter runeImporter;
         bool runeIsOppened = false;
+        private FlowLayoutPanel flpChampions;
+        private PictureBox lastHighlightedChamp;
+
+        [DllImport("user32.dll")]
+        public static extern int SendMessage(IntPtr hWnd, Int32 wMsg, bool wParam, Int32 lParam);
+        private const int WM_SETREDRAW = 11;
         #endregion
         //todo auto populate this!
         #region appLainWinrate
@@ -411,6 +417,30 @@ namespace ChampRune
             chromeBrowser.IsBrowserInitializedChanged += ChromeBrowser_IsBrowserInitializedChanged;
             chromeBrowser.LoadError += ChromeBrowser_LoadError;
             chromeBrowser.HandleCreated += ChromeBrowser_HandleCreated;
+            
+            // Initialize champion panel
+            flpChampions = new FlowLayoutPanel();
+            flpChampions.Name = "flpChampions";
+            flpChampions.Dock = DockStyle.Fill;
+            flpChampions.AutoScroll = true;
+            flpChampions.BackColor = Color.Transparent;
+            
+            // Enable Double Buffering via Reflection (it's a protected property)
+            typeof(Control).GetProperty("DoubleBuffered", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance)
+                ?.SetValue(flpChampions, true, null);
+            
+            // Put it in a container that doesn't overlap with the top menu
+            Panel pnMain = new Panel();
+            pnMain.Name = "pnMain";
+            pnMain.Location = new Point(0, DEFAULT_BUTTON_LOCATION);
+            pnMain.Size = new Size(this.Width, this.Height - DEFAULT_BUTTON_LOCATION - 40);
+            pnMain.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
+            pnMain.BackColor = Color.Transparent;
+            pnMain.Controls.Add(flpChampions);
+            this.Controls.Add(pnMain);
+            pnMain.BringToFront();
+
+            this.Size = new Size(1100, 800);
             Cursor.Current = Cursors.Default;
             pnWeb.AutoScroll = false;
             if (!cacheExist)
@@ -500,75 +530,22 @@ namespace ChampRune
         {
             //Debug.WriteLine("<<<<<<<<<<<<<<<<<<<<<<<WEBSITE Handle Created");
         }
-        void UpdateChampions()
-        {
-            var t = chromeBrowser.GetMainFrame().GetSourceAsync().ContinueWith(taskHtml =>
-           {
-               var html = taskHtml.Result;
-               using (var stream = GenerateStreamFromString(html))
-               {
 
-                   HtmlNodeNavigator navigator = new HtmlNodeNavigator(stream);
-                   var championNames = navigator.Select((".//div [@class='champion-name']"));
-                   List<string> keys = new List<string>();
-                   keys = GetChampionsNames(championNames);
-                   List<string> images = new List<string>();
-                   var championImages = navigator.Select((".//div [@class='image-wrapper']"));
-                   images = GetChampionsImages(championImages);
-                   int locX = 0, locY = DEFAULT_BUTTON_LOCATION;
-                   champWidth = champHeight = int.Parse(tbSize.Text);
-                   STACKS = int.Parse(nudStack.Value.ToString());
-                   for (var i = 0; i < keys.Count(); i++)
-                   {
-                       PictureBox b = new PictureBox();
-                       b.WaitOnLoad = false;
-                       b.SizeMode = PictureBoxSizeMode.StretchImage;
-                       b.BackgroundImageLayout = ImageLayout.Stretch;
-                       b.Size = new Size(champWidth, champHeight);
-                       b.Location = new Point(locX, locY);
-                       b.Name = keys[i];
-                       b.MouseHover += Btn_MouseHover;
-                       b.MouseClick += Btn_Champion_Click_Event;
-                       b.MouseEnter += B_MouseEnter;
-                       //Debug.Write("\"" + b.Name + "\", ");
-                       if (locX + b.Width < champWidth * STACKS)
-                       {
-                           locX += b.Width;
-                       }
-                       else
-                       {
-                           locX = 0;
-                           locY += b.Height;
-                       }
-                       if (!champions.ContainsKey(keys[i]))
-                       {
-                           champions.Add(keys[i], new Champion
-                           {
-                               name = keys[i],
-                               image = b,
-                               imagePath = images[i]
-                           });
-                       }
-                   }
-                   this.Invoke((MethodInvoker)delegate
-                   { // runs on UI thread,
-                       UpdateWithImagesFromUGG();
-                       this.Cursor = Cursors.Default;
-                   });
-               }
-
-           });
-        }
 
 
         private void B_MouseEnter(object sender, EventArgs e)
         {
             PictureBox crtButton = sender as PictureBox;
+            if (crtButton == null) return;
 
-            champions.Where(x => x.Value.image.BorderStyle == BorderStyle.Fixed3D).ToList().ForEach(x => x.Value.image.BorderStyle = BorderStyle.None);
+            if (lastHighlightedChamp != null && lastHighlightedChamp != crtButton)
+            {
+                lastHighlightedChamp.BorderStyle = BorderStyle.None;
+            }
+
             crtButton.BorderStyle = BorderStyle.Fixed3D;
+            lastHighlightedChamp = crtButton;
             DrawMessage(crtButton.Name);
-
         }
 
         void OpenLink(string link, bool visible = true)
@@ -1040,33 +1017,7 @@ namespace ChampRune
             }
             return runesKeystone;
         }
-        private void UpdateWithImagesFromUGG()
-        {
-            if (champions?.Keys.Count > 0)
-            {
-                this.Cursor = Cursors.WaitCursor;
-                foreach (var key in champions.Keys)
-                {
-                    champions[key].image.WaitOnLoad = true;
-                    try
-                    {
-                        if (champions[key].imagePath.ToLower().EndsWith(".webp"))
-                        {
-                            champions[key].imagePath = champions[key].imagePath.Substring(0, champions[key].imagePath.Count() - 4) + "png";
-                        }
-                        champions[key].image.LoadAsync(champions[key].imagePath);
-                    }
-                    catch { }
-                    this.Controls.Add(champions[key].image);
-                }
 
-                g = this.CreateGraphics();
-                SwitchToAllChamps();
-                UpdatePicSize();
-                EnableAllConstrols();
-                this.Cursor = Cursors.Default;
-            }
-        }
 
         private async Task SyncChampionsWithRiot()
         {
@@ -1074,43 +1025,75 @@ namespace ChampRune
             {
                 using (HttpClient client = new HttpClient())
                 {
-                    // 1. Aflăm ultima versiune de patch
-                    var versions = await client.GetStringAsync("https://ddragon.leagueoflegends.com/api/versions.json");
-                    string latest = Newtonsoft.Json.Linq.JArray.Parse(versions)[0].ToString();
+                    string baseDir = Path.GetDirectoryName(workingDirectory);
+                    string cacheDir = Path.Combine(baseDir, "img_cache");
+                    if (!Directory.Exists(cacheDir)) Directory.CreateDirectory(cacheDir);
 
-                    // 2. Descărcăm datele campionilor
+                    // 1. Get latest version
+                    var versionsText = await client.GetStringAsync("https://ddragon.leagueoflegends.com/api/versions.json");
+                    string latest = Newtonsoft.Json.Linq.JArray.Parse(versionsText)[0].ToString();
+
+                    // 2. Download champion data
                     var json = await client.GetStringAsync($"https://ddragon.leagueoflegends.com/cdn/{latest}/data/en_US/champion.json");
                     var data = Newtonsoft.Json.Linq.JObject.Parse(json)["data"];
 
                     champions = new Dictionary<string, Champion>();
-                    int locX = 0, locY = DEFAULT_BUTTON_LOCATION;
-                    champWidth = champHeight = int.Parse(tbSize.Text);
-                    STACKS = int.Parse(nudStack.Value.ToString());
+                    int champWidth = int.Parse(tbSize.Text);
+                    int champHeight = int.Parse(tbSize.Text);
+
+                    // Use a semaphore to limit concurrent downloads to 5
+                    var semaphore = new SemaphoreSlim(5);
+                    var downloadTasks = new List<Task>();
 
                     foreach (var champ in (JObject)data)
                     {
                         string name = champ.Key.ToString();
-                        string keyId = champ.Value["key"].ToString();
+                        string keyId = champ.Value["key"]?.ToString();
+                        string imgUrl = $"https://ddragon.leagueoflegends.com/cdn/{latest}/img/champion/{name}.png";
+                        string localPath = Path.Combine(cacheDir, name + ".png");
 
                         PictureBox b = new PictureBox();
                         b.WaitOnLoad = false;
                         b.SizeMode = PictureBoxSizeMode.StretchImage;
-                        b.BackgroundImageLayout = ImageLayout.Stretch;
                         b.Size = new Size(champWidth, champHeight);
-                        b.Location = new Point(locX, locY);
                         b.Name = name;
                         b.MouseHover += Btn_MouseHover;
                         b.MouseClick += Btn_Champion_Click_Event;
                         b.MouseEnter += B_MouseEnter;
+                        b.BackColor = Color.FromArgb(20, 20, 20); // Dark placeholder
 
-                        if (locX + b.Width < champWidth * STACKS)
+                        if (File.Exists(localPath))
                         {
-                            locX += b.Width;
+                            try {
+                                b.Image = Image.FromFile(localPath);
+                            } catch {
+                                b.ImageLocation = imgUrl; // Fallback
+                            }
                         }
                         else
                         {
-                            locX = 0;
-                            locY += b.Height;
+                            // Download in background with limited concurrency
+                            downloadTasks.Add(Task.Run(async () => {
+                                await semaphore.WaitAsync();
+                                try {
+                                    using (HttpClient downloadClient = new HttpClient()) {
+                                        byte[] imgData = await downloadClient.GetByteArrayAsync(imgUrl);
+                                        File.WriteAllBytes(localPath, imgData);
+                                        this.Invoke((MethodInvoker)delegate {
+                                            if (champions.ContainsKey(name)) {
+                                                try {
+                                                    champions[name].image.Image = Image.FromFile(localPath);
+                                                } catch {
+                                                    champions[name].image.ImageLocation = localPath;
+                                                }
+                                            }
+                                        });
+                                    }
+                                } catch {}
+                                finally {
+                                    semaphore.Release();
+                                }
+                            }));
                         }
 
                         champions.Add(name, new Champion
@@ -1118,13 +1101,22 @@ namespace ChampRune
                             name = name,
                             id = keyId,
                             image = b,
-                            imagePath = $"https://ddragon.leagueoflegends.com/cdn/{latest}/img/champion/{name}.png"
+                            imagePath = imgUrl
                         });
                     }
 
                     this.Invoke((MethodInvoker)delegate
                     {
-                        UpdateWithImagesFromUGG();
+                        flpChampions.SuspendLayout();
+                        flpChampions.Controls.Clear();
+                        foreach(var champ in champions.Values)
+                        {
+                            flpChampions.Controls.Add(champ.image);
+                        }
+                        UpdatePicSize();
+                        SwitchToAllChamps();
+                        EnableAllConstrols();
+                        flpChampions.ResumeLayout();
                         this.Cursor = Cursors.Default;
                     });
                 }
@@ -1135,7 +1127,7 @@ namespace ChampRune
             }
         }
 
-        private async Task<List<int>> GetRunesFromUgg(string champName)
+        private async Task<JObject> GetRunesFromUgg(string champName)
         {
             try
             {
@@ -1143,34 +1135,80 @@ namespace ChampRune
                 {
                     client.DefaultRequestHeaders.Add("User-Agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64)");
 
-                    string url = $"https://u.gg/lol/champions/{champName.ToLower()}/build";
+                    string url = $"https://u.gg/lol/champions/{champName.ToLower().Replace(" ", "").Replace("'", "")}/build";
                     string html = await client.GetStringAsync(url);
 
-                    string pattern = @"(?<=""selectedPerks"":\[).*?(?=\])";
-                    var match = Regex.Match(html, pattern);
+                    var perksMatch = Regex.Match(html, @"(?<=""selectedPerks"":\[).*?(?=\])");
+                    var primaryMatch = Regex.Match(html, @"(?<=""primaryPathId"":)[0-9]+");
+                    var secondaryMatch = Regex.Match(html, @"(?<=""secondaryPathId"":)[0-9]+");
 
-                    if (match.Success)
+                    if (perksMatch.Success && primaryMatch.Success && secondaryMatch.Success)
                     {
-                        return match.Value.Split(',')
-                                          .Select(id => int.Parse(id.Trim()))
-                                          .ToList();
+                        var runes = new JObject();
+                        runes["perks"] = new JArray(perksMatch.Value.Split(',').Select(id => int.Parse(id.Trim())).ToArray());
+                        runes["primary"] = int.Parse(primaryMatch.Value);
+                        runes["secondary"] = int.Parse(secondaryMatch.Value);
+                        return runes;
                     }
                 }
             }
             catch (Exception ex)
             {
-                Debug.WriteLine("Error fetching runes: " + ex.Message);
+                Debug.WriteLine("Error fetching runes from U.GG: " + ex.Message);
             }
             return null;
         }
 
         private async void AutoApplyRunes(string name)
         {
-            var runes = await GetRunesFromUgg(name);
-            if (runes != null)
+            if (!leagueClient.IsConnected) return;
+
+            var runeData = await GetRunesFromUgg(name);
+            if (runeData != null)
             {
-                Debug.WriteLine($"Found runes for {name}: {string.Join(", ", runes)}");
-                // Application logic via LCU could be added here
+                try
+                {
+                    Debug.WriteLine($"Applying runes for {name}...");
+                    
+                    // 1. Get all rune pages
+                    string pagesJson = await leagueClient.Request(LeagueClient.requestMethod.GET, "/lol-perks/v1/pages", "");
+                    if (string.IsNullOrEmpty(pagesJson)) return;
+
+                    var pages = JArray.Parse(pagesJson);
+                    
+                    // 2. Find an editable page (usually the one named 'ChampRune' if exists, otherwise any editable)
+                    var targetPage = pages.FirstOrDefault(p => p["name"]?.ToString() == "ChampRune") 
+                                  ?? pages.FirstOrDefault(p => (bool)p["isDeletable"]);
+
+                    if (targetPage == null)
+                    {
+                        Debug.WriteLine("No editable rune page found!");
+                        return;
+                    }
+
+                    int pageId = (int)targetPage["id"];
+                    
+                    // 3. Construct the updated page object
+                    var newPage = new JObject();
+                    newPage["name"] = "ChampRune: " + name;
+                    newPage["primaryStyleId"] = runeData["primary"];
+                    newPage["subStyleId"] = runeData["secondary"];
+                    newPage["selectedPerkIds"] = runeData["perks"];
+                    newPage["current"] = true;
+
+                    // 4. Update the page via LCU PUT request
+                    await leagueClient.Request(LeagueClient.requestMethod.PUT, $"/lol-perks/v1/pages/{pageId}", newPage.ToString());
+                    
+                    this.Invoke((MethodInvoker)delegate {
+                        lblPhase.Text = "Runes Applied: " + name;
+                    });
+                    
+                    Debug.WriteLine($"Successfully applied runes for {name} to page {pageId}");
+                }
+                catch (Exception ex)
+                {
+                    Debug.WriteLine("Error applying runes via LCU: " + ex.Message);
+                }
             }
         }
 
@@ -1319,60 +1357,17 @@ namespace ChampRune
         {
             if (!cbSearch.Checked)
             {
-                pnWeb.Visible = false;
-                pnWeb.SendToBack();
+                flpChampions.Visible = true;
+                flpChampions.BringToFront();
 
-                btnAll.Enabled = false;
-                btnTop.Enabled = true;
-                btnMid.Enabled = true;
-                btnAdc.Enabled = true;
-                btnJun.Enabled = true;
-                btnSup.Enabled = true;
-                if (tbSearch.Text == "")
+                foreach (var champ in champions.Values)
                 {
-                    SwitchToAllChamps();
-                    btnItems.Enabled = true;
-                    return;
-                }
-                int locX = 0, locY = DEFAULT_BUTTON_LOCATION;
-                foreach (var key in champions.Keys)
-                {
-                    if (champions[key].name.ToLower().StartsWith(tbSearch.Text.ToLower()))
+                    bool shouldBeVisible = string.IsNullOrEmpty(tbSearch.Text) || champ.name.ToLower().Contains(tbSearch.Text.ToLower());
+                    if (champ.image.Visible != shouldBeVisible)
                     {
-                        if (champions[key].image.Location != new Point(locX, locY))
-                        {
-                            champions[key].image.Location = new Point(locX, locY);
-                        }
-                        if (champions[key].image.Visible == false)
-                        {
-                            champions[key].image.Visible = true;
-                        }
-                        champions[key].image.BringToFront();
-                        if (locX + champions[key].image.Width < champWidth * STACKS)
-                        {
-                            locX += champions[key].image.Width;
-                        }
-                        else
-                        {
-                            locX = 0;
-                            locY += champions[key].image.Height;
-                        }
-                    }
-                    else
-                    {
-                        if (champions[key].image.Location != new Point(this.Width - DEFAULT_BUTTON_LOCATION, this.Height - DEFAULT_BUTTON_LOCATION))
-                        {
-                            champions[key].image.Location = new Point(this.Width - DEFAULT_BUTTON_LOCATION, this.Height - DEFAULT_BUTTON_LOCATION);
-                        }
-                        if (champions[key].image.Visible == true)
-                        {
-                            champions[key].image.Visible = false;
-                        }
-                        champions[key].image.SendToBack();
+                        champ.image.Visible = shouldBeVisible;
                     }
                 }
-                this.Invalidate();
-                this.Refresh();
             }
         }
 
@@ -1383,28 +1378,29 @@ namespace ChampRune
 
         void SwitchToListNames(Dictionary<string, float> names, string lain)
         {
-            int locX = 0, locY = DEFAULT_BUTTON_LOCATION;
-            foreach (string key in champions.Keys)
+            if (champions == null) return;
+            
+            // Freeze drawing to prevent flicker and lag
+            SendMessage(flpChampions.Handle, WM_SETREDRAW, false, 0);
+            
+            flpChampions.SuspendLayout();
+            flpChampions.Visible = true;
+            flpChampions.BringToFront();
+
+            foreach (var key in champions.Keys)
             {
-                champions[key].image.Visible = false;
-                champions[key].image.Refresh();
-            }
-            foreach (var key in names.Keys)
-            {
-                champions[key].image.Visible = true;
-                champions[key].image.Location = new Point(locX, locY);
-                champions[key].image.Refresh();
-                if (locX + champions[key].image.Width < champWidth * STACKS)
+                bool shouldBeVisible = names.ContainsKey(key);
+                if (champions[key].image.Visible != shouldBeVisible)
                 {
-                    locX += champions[key].image.Width;
-                }
-                else
-                {
-                    locX = 0;
-                    locY += champions[key].image.Height;
+                    champions[key].image.Visible = shouldBeVisible;
                 }
             }
-            this.Refresh();
+            
+            flpChampions.ResumeLayout();
+            
+            // Re-enable drawing and force a final single paint
+            SendMessage(flpChampions.Handle, WM_SETREDRAW, true, 0);
+            flpChampions.Refresh();
         }
 
 
@@ -1458,7 +1454,6 @@ namespace ChampRune
         void TopWinRateLain(Dictionary<string, float> names, string lain)
         {
             pnWeb.Visible = false;
-            pnWeb.Refresh();
             SwitchToListNames(names, lain);
             tbSearch.Focus();
             btnItems.Enabled = true;
@@ -1489,7 +1484,6 @@ namespace ChampRune
             {
                 TopWinRateLain(midListNames, lains[1].Trim().ToLower());
             }
-            this.Refresh();
         }
 
         private void btnAdc_Click(object sender, EventArgs e)
@@ -1503,7 +1497,6 @@ namespace ChampRune
             {
                 TopWinRateLain(adcListNames, lains[2].Trim().ToLower());
             }
-            this.Refresh();
         }
         private void btnJun_Click(object sender, EventArgs e)
         {
@@ -1516,7 +1509,6 @@ namespace ChampRune
             {
                 TopWinRateLain(junListNames, lains[3].Trim().ToLower());
             }
-            this.Refresh();
         }
         private void btnSup_Click(object sender, EventArgs e)
         {
@@ -1529,7 +1521,6 @@ namespace ChampRune
             {
                 TopWinRateLain(supListNames, lains[4].Trim().ToLower());
             }
-            this.Refresh();
         }
 
         void SwitchToAllChamps()
@@ -1541,31 +1532,29 @@ namespace ChampRune
             }
             else
             {
-                tbSearch.Focus();
-                int locX = 0, locY = DEFAULT_BUTTON_LOCATION;
-                if (champions == null) { return; }
-                foreach (var key in champions?.Keys)
+                // Freeze drawing
+                SendMessage(flpChampions.Handle, WM_SETREDRAW, false, 0);
+                
+                flpChampions.SuspendLayout();
+                flpChampions.Visible = true;
+                flpChampions.BringToFront();
+
+                foreach (var key in champions.Keys)
                 {
-                    champions[key].image.Visible = true;
-                    if (champions[key].image.Location != new Point(locX, locY))
+                    if (!champions[key].image.Visible)
                     {
-                        champions[key].image.Location = new Point(locX, locY);
-                    }
-                    champions[key].image.Refresh();
-                    if (locX + champions[key].image.Width < champWidth * STACKS)
-                    {
-                        locX += champions[key].image.Width;
-                    }
-                    else
-                    {
-                        locX = 0;
-                        locY += champions[key].image.Height;
+                        champions[key].image.Visible = true;
                     }
                 }
                 pnWeb.Visible = false;
                 btnItems.Enabled = true;
+                
+                flpChampions.ResumeLayout();
+                
+                // Unfreeze and refresh once
+                SendMessage(flpChampions.Handle, WM_SETREDRAW, true, 0);
+                flpChampions.Refresh();
             }
-            this.Refresh();
         }
 
         private void btnAll_Click(object sender, EventArgs e)
