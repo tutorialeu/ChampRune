@@ -60,6 +60,7 @@ namespace ChampRune
             this.label3 = new System.Windows.Forms.Label();
             this.label4 = new System.Windows.Forms.Label();
             this.cbSwitchSpells = new System.Windows.Forms.CheckBox();
+            this.cbAutoImportViaAPI = new System.Windows.Forms.CheckBox();
             ((System.ComponentModel.ISupportInitialize)(this.pbChampion)).BeginInit();
             this.SuspendLayout();
             // 
@@ -320,12 +321,13 @@ namespace ChampRune
             this.label1.AutoSize = true;
             this.label1.BackColor = System.Drawing.Color.Thistle;
             this.label1.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label1.Location = new System.Drawing.Point(25, 325);
+            this.label1.Location = new System.Drawing.Point(12, 336);
             this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(529, 72);
+            this.label1.Size = new System.Drawing.Size(529, 96);
             this.label1.TabIndex = 217;
-            this.label1.Text = "This tool is using your mouse to auto change the runes!\r\nDon\'t move the mouse whi" +
-    "le doing the import!\r\nWait untill import is finish on the client.";
+            this.label1.Text = "This tool is using your mouse to auto change the runes \r\nif the Auto Import via A" +
+    "PI is not selected!\r\nDon\'t move the mouse while doing the import!\r\nWait untill i" +
+    "mport is finish on the client.";
             // 
             // label2
             // 
@@ -441,6 +443,20 @@ namespace ChampRune
             this.cbSwitchSpells.UseVisualStyleBackColor = false;
             this.cbSwitchSpells.CheckedChanged += new System.EventHandler(this.cbSwitchSpells_CheckedChanged);
             // 
+            // cbAutoImportViaAPI
+            // 
+            this.cbAutoImportViaAPI.AutoSize = true;
+            this.cbAutoImportViaAPI.BackColor = System.Drawing.Color.LightGreen;
+            this.cbAutoImportViaAPI.Checked = true;
+            this.cbAutoImportViaAPI.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.cbAutoImportViaAPI.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.cbAutoImportViaAPI.Location = new System.Drawing.Point(651, 193);
+            this.cbAutoImportViaAPI.Name = "cbAutoImportViaAPI";
+            this.cbAutoImportViaAPI.Size = new System.Drawing.Size(184, 24);
+            this.cbAutoImportViaAPI.TabIndex = 227;
+            this.cbAutoImportViaAPI.Text = "Auto Import via API";
+            this.cbAutoImportViaAPI.UseVisualStyleBackColor = false;
+            // 
             // RuneImporter
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -450,6 +466,7 @@ namespace ChampRune
             this.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
             this.ClientSize = new System.Drawing.Size(847, 444);
             this.Controls.Add(this.cbSwitchSpells);
+            this.Controls.Add(this.cbAutoImportViaAPI);
             this.Controls.Add(this.label4);
             this.Controls.Add(this.label3);
             this.Controls.Add(this.lblSpells);
@@ -524,5 +541,6 @@ namespace ChampRune
         private System.Windows.Forms.Label label3;
         private System.Windows.Forms.Label label4;
         private System.Windows.Forms.CheckBox cbSwitchSpells;
+        private System.Windows.Forms.CheckBox cbAutoImportViaAPI;
     }
 }
