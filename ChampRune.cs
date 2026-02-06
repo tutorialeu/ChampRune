@@ -466,17 +466,20 @@ namespace ChampRune
             }
             pnWeb.BringToFront();
             leagueClient = new LeagueClient(LeagueClient.credentials.lockfile);
-            if (!leagueClient.IsConnected)
+            
+            // Always listen for connection events
+            leagueClient.OnConnected += LeagueClient_OnConnected;
+            leagueClient.OnDisconnected += LeagueClient_OnDisconnected;
+            leagueClient.OnWebsocketEvent += LeagueClient_OnWebsocketEvent;
+
+            if (leagueClient.IsConnected)
             {
-                lblPhase.Text = "Phase: Client Offline";
+                // If already connected, manual trigger
+                LeagueClient_OnConnected();
             }
             else
             {
-                leagueClient.OnConnected += LeagueClient_OnConnected;
-                leagueClient.OnDisconnected += LeagueClient_OnDisconnected;
-                leagueClient.OnWebsocketEvent += LeagueClient_OnWebsocketEvent;
-                leagueClient.Subscribe("/lol-gameflow/v1/gameflow-phase", GameFlowPhase);
-                leagueClient.Subscribe("/lol-champ-select/v1/session", ChampSelectEvent);
+                lblPhase.Text = "Phase: Client Offline";
             }
             _ = SyncChampionsWithRiot();
         }
@@ -517,6 +520,11 @@ namespace ChampRune
 
         private void LeagueClient_OnConnected()
         {
+            try {
+                leagueClient.Subscribe("/lol-gameflow/v1/gameflow-phase", GameFlowPhase);
+                leagueClient.Subscribe("/lol-champ-select/v1/session", ChampSelectEvent);
+            } catch { }
+
             this.Invoke((MethodInvoker)delegate
             { // runs on UI thread,
                 lblPhase.Text = "Phase: Online";
@@ -532,7 +540,7 @@ namespace ChampRune
             { // runs on UI thread,
                 lblPhase.Text = "Phase: " + phase;
             });
-            //Debug.WriteLine("ChampRune Phase changed: " + phase);
+            Debug.WriteLine("ChampRune Phase changed: " + phase);
         }
         private void ChromeBrowser_HandleCreated(object sender, EventArgs e)
         {
@@ -1273,7 +1281,7 @@ namespace ChampRune
         {
             try
             {
-                var data = JObject.Parse(e.Data);
+                var data = e.Data;
                 var myCellId = data["localPlayerCellId"]?.ToString();
                 var actions = data["actions"];
 
@@ -1289,7 +1297,26 @@ namespace ChampRune
                             var champ = champions.Values.FirstOrDefault(c => c.id == champId);
                             if (champ != null)
                             {
-                                Task.Run(() => AutoApplyRunes(champ.name));
+                                this.Invoke((MethodInvoker)delegate
+                                {
+                                    tbSearch.Text = champ.name;
+                                    cbSearch.Checked = false; // Ensure search is enabled
+                                    PerformSearch(champ.name); // Force immediate search
+                                });
+                            }
+                        }
+                        else if (action["actorCellId"]?.ToString() == myCellId && action["type"] == "pick")
+                        {
+                            string champId = action["championId"]?.ToString();
+                            var champ = champions.Values.FirstOrDefault(c => c.id == champId);
+                            if (champ != null)
+                            {
+                                this.Invoke((MethodInvoker)delegate
+                                {
+                                    tbSearch.Text = champ.name;
+                                    cbSearch.Checked = false; // Ensure search is enabled
+                                    PerformSearch(champ.name); // Force immediate search
+                                });
                             }
                         }
                     }
@@ -1442,7 +1469,7 @@ namespace ChampRune
             }
         }
 
-        private void SearchTimer_Tick(object sender, EventArgs e)
+        private void PerformSearch(string searchText = null)
         {
             searchTimer.Stop();
             
@@ -1450,12 +1477,12 @@ namespace ChampRune
             SendMessage(flpChampions.Handle, WM_SETREDRAW, false, 0);
             flpChampions.SuspendLayout();
             
-            string searchText = tbSearch.Text.ToLower();
-            bool isSearchEmpty = string.IsNullOrEmpty(searchText);
+            string text = searchText ?? tbSearch.Text.ToLower();
+            bool isSearchEmpty = string.IsNullOrEmpty(text);
 
             foreach (var champ in champions.Values)
             {
-                bool shouldBeVisible = isSearchEmpty || champ.name.ToLower().Contains(searchText);
+                bool shouldBeVisible = isSearchEmpty || champ.name.ToLower().Contains(text.ToLower());
                 if (champ.image.Visible != shouldBeVisible)
                 {
                     champ.image.Visible = shouldBeVisible;
@@ -1466,6 +1493,11 @@ namespace ChampRune
             SendMessage(flpChampions.Handle, WM_SETREDRAW, true, 0);
             flpChampions.Refresh();
             UpdateCountLabel();
+        }
+
+        private void SearchTimer_Tick(object sender, EventArgs e)
+        {
+            PerformSearch();
         }
 
         private void UpdateCountLabel()
