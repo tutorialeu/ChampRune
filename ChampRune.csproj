@@ -133,6 +133,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Champion.cs" />
+    <Compile Include="ChampionDataStore.cs" />
     <Compile Include="DownloadHandler .cs" />
     <Compile Include="ChampRune.cs">
       <SubType>Form</SubType>

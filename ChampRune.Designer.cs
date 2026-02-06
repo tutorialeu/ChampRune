@@ -271,7 +271,7 @@ namespace ChampRune
             // 
             // lblText
             // 
-            this.lblText.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.lblText.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.lblText.AutoSize = true;
             this.lblText.Font = new System.Drawing.Font("Reem Kufi", 12F);
             this.lblText.Location = new System.Drawing.Point(779, 0);
@@ -833,7 +833,7 @@ namespace ChampRune
             this.nudPatch1.Font = new System.Drawing.Font("Reem Kufi", 8.25F);
             this.nudPatch1.Location = new System.Drawing.Point(451, 33);
             this.nudPatch1.Maximum = new decimal(new int[] {
-            40,
+            100,
             0,
             0,
             0});
@@ -859,7 +859,7 @@ namespace ChampRune
             this.nudPatch2.Font = new System.Drawing.Font("Reem Kufi", 8.25F);
             this.nudPatch2.Location = new System.Drawing.Point(484, 33);
             this.nudPatch2.Maximum = new decimal(new int[] {
-            40,
+            100,
             0,
             0,
             0});
@@ -951,6 +951,7 @@ namespace ChampRune
             this.cbRegion.Name = "cbRegion";
             this.cbRegion.Size = new System.Drawing.Size(50, 29);
             this.cbRegion.TabIndex = 140;
+            this.cbRegion.SelectedIndexChanged += new System.EventHandler(this.cbRegion_SelectedIndexChanged);
             // 
             // frmMain
             // 
