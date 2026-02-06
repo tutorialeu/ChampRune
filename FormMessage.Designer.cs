@@ -61,15 +61,15 @@ namespace ChampRune
             this.lblTitle.Location = new System.Drawing.Point(51, 17);
             this.lblTitle.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.lblTitle.Name = "lblTitle";
-            this.lblTitle.Size = new System.Drawing.Size(137, 30);
+            this.lblTitle.Size = new System.Drawing.Size(135, 20);
             this.lblTitle.TabIndex = 127;
             this.lblTitle.Text = "Random title here";
             this.lblTitle.MouseDown += new System.Windows.Forms.MouseEventHandler(this.lblTitle_MouseDown);
             // 
             // pnTextAndButtons
             // 
-            this.pnTextAndButtons.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
-            | System.Windows.Forms.AnchorStyles.Left)
+            this.pnTextAndButtons.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.pnTextAndButtons.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.pnTextAndButtons.Controls.Add(this.lblMessage);
@@ -78,7 +78,7 @@ namespace ChampRune
             this.pnTextAndButtons.Controls.Add(this.btnYes);
             this.pnTextAndButtons.Location = new System.Drawing.Point(12, 63);
             this.pnTextAndButtons.Name = "pnTextAndButtons";
-            this.pnTextAndButtons.Size = new System.Drawing.Size(376, 106);
+            this.pnTextAndButtons.Size = new System.Drawing.Size(648, 121);
             this.pnTextAndButtons.TabIndex = 4;
             // 
             // lblMessage
@@ -87,7 +87,7 @@ namespace ChampRune
             this.lblMessage.Location = new System.Drawing.Point(4, 8);
             this.lblMessage.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.lblMessage.Name = "lblMessage";
-            this.lblMessage.Size = new System.Drawing.Size(137, 30);
+            this.lblMessage.Size = new System.Drawing.Size(136, 20);
             this.lblMessage.TabIndex = 7;
             this.lblMessage.Text = "Random text here";
             // 
@@ -95,7 +95,7 @@ namespace ChampRune
             // 
             this.btnOk.Anchor = System.Windows.Forms.AnchorStyles.Bottom;
             this.btnOk.DialogResult = System.Windows.Forms.DialogResult.OK;
-            this.btnOk.Location = new System.Drawing.Point(145, 67);
+            this.btnOk.Location = new System.Drawing.Point(281, 82);
             this.btnOk.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.btnOk.Name = "btnOk";
             this.btnOk.Size = new System.Drawing.Size(91, 32);
@@ -107,7 +107,7 @@ namespace ChampRune
             // 
             this.btnNo.Anchor = System.Windows.Forms.AnchorStyles.Bottom;
             this.btnNo.DialogResult = System.Windows.Forms.DialogResult.No;
-            this.btnNo.Location = new System.Drawing.Point(191, 67);
+            this.btnNo.Location = new System.Drawing.Point(327, 82);
             this.btnNo.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.btnNo.Name = "btnNo";
             this.btnNo.Size = new System.Drawing.Size(94, 32);
@@ -120,7 +120,7 @@ namespace ChampRune
             // 
             this.btnYes.Anchor = System.Windows.Forms.AnchorStyles.Bottom;
             this.btnYes.DialogResult = System.Windows.Forms.DialogResult.Yes;
-            this.btnYes.Location = new System.Drawing.Point(89, 67);
+            this.btnYes.Location = new System.Drawing.Point(225, 82);
             this.btnYes.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.btnYes.Name = "btnYes";
             this.btnYes.Size = new System.Drawing.Size(94, 32);
@@ -134,10 +134,10 @@ namespace ChampRune
             this.llLinks.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.llLinks.AutoSize = true;
             this.llLinks.BackColor = System.Drawing.Color.Transparent;
-            this.llLinks.Font = new System.Drawing.Font("Reem Kufi", 8.25F);
-            this.llLinks.Location = new System.Drawing.Point(271, 9);
+            this.llLinks.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F);
+            this.llLinks.Location = new System.Drawing.Point(543, 9);
             this.llLinks.Name = "llLinks";
-            this.llLinks.Size = new System.Drawing.Size(117, 21);
+            this.llLinks.Size = new System.Drawing.Size(98, 13);
             this.llLinks.TabIndex = 128;
             this.llLinks.TabStop = true;
             this.llLinks.Text = "https://tutorialeu.ro";
@@ -145,18 +145,18 @@ namespace ChampRune
             // 
             // FormMessage
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(10F, 30F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(9F, 20F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
             this.BackColor = System.Drawing.SystemColors.Control;
-            this.ClientSize = new System.Drawing.Size(400, 181);
+            this.ClientSize = new System.Drawing.Size(672, 196);
             this.ControlBox = false;
             this.Controls.Add(this.llLinks);
             this.Controls.Add(this.pnTextAndButtons);
             this.Controls.Add(this.lblTitle);
             this.Controls.Add(this.btnExit);
             this.Cursor = System.Windows.Forms.Cursors.Default;
-            this.Font = new System.Drawing.Font("Reem Kufi", 12F);
+            this.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F);
             this.Margin = new System.Windows.Forms.Padding(5, 7, 5, 7);
             this.MaximizeBox = false;
             this.MinimizeBox = false;
