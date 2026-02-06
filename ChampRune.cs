@@ -58,8 +58,10 @@ namespace ChampRune
         ThemeSelector themeSelector;
         RuneImporter runeImporter;
         bool runeIsOppened = false;
+        private bool isSortedNewestFirst = false; // Default is Oldest First (Ascending)
         private FlowLayoutPanel flpChampions;
         private PictureBox lastHighlightedChamp;
+        private System.Windows.Forms.Timer searchTimer;
 
         [DllImport("user32.dll")]
         public static extern int SendMessage(IntPtr hWnd, Int32 wMsg, bool wParam, Int32 lParam);
@@ -316,6 +318,12 @@ namespace ChampRune
             InitializeComponent();
             DisableAllConstrols();
             init = true;
+            
+            // Initialize search timer
+            searchTimer = new System.Windows.Forms.Timer();
+            searchTimer.Interval = 300; // 300ms debounce
+            searchTimer.Tick += SearchTimer_Tick;
+
             try
             {
                 SavedItems si = XMLSaveData.DeserializeToObject<SavedItems>(Path.GetDirectoryName(workingDirectory) + @"\\save.data");
@@ -458,17 +466,20 @@ namespace ChampRune
             }
             pnWeb.BringToFront();
             leagueClient = new LeagueClient(LeagueClient.credentials.lockfile);
-            if (!leagueClient.IsConnected)
+            
+            // Always listen for connection events
+            leagueClient.OnConnected += LeagueClient_OnConnected;
+            leagueClient.OnDisconnected += LeagueClient_OnDisconnected;
+            leagueClient.OnWebsocketEvent += LeagueClient_OnWebsocketEvent;
+
+            if (leagueClient.IsConnected)
             {
-                lblPhase.Text = "Phase: Client Offline";
+                // If already connected, manual trigger
+                LeagueClient_OnConnected();
             }
             else
             {
-                leagueClient.OnConnected += LeagueClient_OnConnected;
-                leagueClient.OnDisconnected += LeagueClient_OnDisconnected;
-                leagueClient.OnWebsocketEvent += LeagueClient_OnWebsocketEvent;
-                leagueClient.Subscribe("/lol-gameflow/v1/gameflow-phase", GameFlowPhase);
-                leagueClient.Subscribe("/lol-champ-select/v1/session", ChampSelectEvent);
+                lblPhase.Text = "Phase: Client Offline";
             }
             _ = SyncChampionsWithRiot();
         }
@@ -509,6 +520,11 @@ namespace ChampRune
 
         private void LeagueClient_OnConnected()
         {
+            try {
+                leagueClient.Subscribe("/lol-gameflow/v1/gameflow-phase", GameFlowPhase);
+                leagueClient.Subscribe("/lol-champ-select/v1/session", ChampSelectEvent);
+            } catch { }
+
             this.Invoke((MethodInvoker)delegate
             { // runs on UI thread,
                 lblPhase.Text = "Phase: Online";
@@ -524,7 +540,7 @@ namespace ChampRune
             { // runs on UI thread,
                 lblPhase.Text = "Phase: " + phase;
             });
-            //Debug.WriteLine("ChampRune Phase changed: " + phase);
+            Debug.WriteLine("ChampRune Phase changed: " + phase);
         }
         private void ChromeBrowser_HandleCreated(object sender, EventArgs e)
         {
@@ -660,11 +676,23 @@ namespace ChampRune
         private void DrawMessage(string message)
         {
             lblText.Text = message;
-            lblText.Location = new Point(this.Width - lblText.Width - 10, 60);
+            // Position at bottom-right with some padding
+            lblText.Location = new Point(this.ClientSize.Width - lblText.Width - 15, this.ClientSize.Height - lblText.Height - 15);
+            lblText.BringToFront();
         }
         private void Btn_MouseHover(object sender, EventArgs e)
         {
-            DrawMessage((sender as PictureBox).Name);
+            var pb = sender as PictureBox;
+            if (pb != null && champions.ContainsKey(pb.Name))
+            {
+                var champ = champions[pb.Name];
+                string dateStr = champ.releaseDate == DateTime.MinValue ? "Unknown" : champ.releaseDate.ToString("yyyy-MM-dd");
+                DrawMessage($"{champ.name} ({dateStr})");
+            }
+            else
+            {
+                DrawMessage(pb?.Name ?? "");
+            }
         }
 
         private void ChromeBrowser_LoadError(object sender, LoadErrorEventArgs e)
@@ -1027,14 +1055,46 @@ namespace ChampRune
                 {
                     string baseDir = Path.GetDirectoryName(workingDirectory);
                     string cacheDir = Path.Combine(baseDir, "img_cache");
+                    string dataDir = Path.Combine(baseDir, "data_cache");
                     if (!Directory.Exists(cacheDir)) Directory.CreateDirectory(cacheDir);
+                    if (!Directory.Exists(dataDir)) Directory.CreateDirectory(dataDir);
 
-                    // 1. Get latest version
+                    ChampionDataStore.Initialize(dataDir);
+                    _ = ChampionDataStore.SyncFromKerrdersAsync(); // Background sync
+                    string versionFilePath = Path.Combine(dataDir, "version.txt");
+                    string championJsonPath = Path.Combine(dataDir, "champions.json");
+
+                    // 1. Get latest version from Riot
                     var versionsText = await client.GetStringAsync("https://ddragon.leagueoflegends.com/api/versions.json");
-                    string latest = Newtonsoft.Json.Linq.JArray.Parse(versionsText)[0].ToString();
+                    string latestVersion = Newtonsoft.Json.Linq.JArray.Parse(versionsText)[0].ToString();
 
-                    // 2. Download champion data
-                    var json = await client.GetStringAsync($"https://ddragon.leagueoflegends.com/cdn/{latest}/data/en_US/champion.json");
+                    // Update patch controls on UI thread
+                    this.Invoke((MethodInvoker)delegate
+                    {
+                        var parts = latestVersion.Split('.');
+                        if (parts.Length >= 2)
+                        {
+                            if (decimal.TryParse(parts[0], out decimal p1)) nudPatch1.Value = p1;
+                            if (decimal.TryParse(parts[1], out decimal p2)) nudPatch2.Value = p2;
+                        }
+                    });
+
+                    string storedVersion = File.Exists(versionFilePath) ? File.ReadAllText(versionFilePath) : "";
+                    string json;
+
+                    // 2. Check if we have the data locally and it's up to date
+                    if (storedVersion == latestVersion && File.Exists(championJsonPath))
+                    {
+                        json = File.ReadAllText(championJsonPath);
+                    }
+                    else
+                    {
+                        // Download fresh data
+                        json = await client.GetStringAsync($"https://ddragon.leagueoflegends.com/cdn/{latestVersion}/data/en_US/champion.json");
+                        File.WriteAllText(championJsonPath, json);
+                        File.WriteAllText(versionFilePath, latestVersion);
+                    }
+
                     var data = Newtonsoft.Json.Linq.JObject.Parse(json)["data"];
 
                     champions = new Dictionary<string, Champion>();
@@ -1049,7 +1109,7 @@ namespace ChampRune
                     {
                         string name = champ.Key.ToString();
                         string keyId = champ.Value["key"]?.ToString();
-                        string imgUrl = $"https://ddragon.leagueoflegends.com/cdn/{latest}/img/champion/{name}.png";
+                        string imgUrl = $"https://ddragon.leagueoflegends.com/cdn/{latestVersion}/img/champion/{name}.png";
                         string localPath = Path.Combine(cacheDir, name + ".png");
 
                         PictureBox b = new PictureBox();
@@ -1101,7 +1161,8 @@ namespace ChampRune
                             name = name,
                             id = keyId,
                             image = b,
-                            imagePath = imgUrl
+                            imagePath = imgUrl,
+                            releaseDate = ChampionDataStore.GetReleaseDate(name)
                         });
                     }
 
@@ -1109,7 +1170,11 @@ namespace ChampRune
                     {
                         flpChampions.SuspendLayout();
                         flpChampions.Controls.Clear();
-                        foreach(var champ in champions.Values)
+                        
+                        // Sort champions by release date (oldest first)
+                        var sortedChamps = champions.Values.OrderBy(c => c.releaseDate).ToList();
+                        
+                        foreach(var champ in sortedChamps)
                         {
                             flpChampions.Controls.Add(champ.image);
                         }
@@ -1216,7 +1281,7 @@ namespace ChampRune
         {
             try
             {
-                var data = JObject.Parse(e.Data);
+                var data = e.Data;
                 var myCellId = data["localPlayerCellId"]?.ToString();
                 var actions = data["actions"];
 
@@ -1232,7 +1297,26 @@ namespace ChampRune
                             var champ = champions.Values.FirstOrDefault(c => c.id == champId);
                             if (champ != null)
                             {
-                                Task.Run(() => AutoApplyRunes(champ.name));
+                                this.Invoke((MethodInvoker)delegate
+                                {
+                                    tbSearch.Text = champ.name;
+                                    cbSearch.Checked = false; // Ensure search is enabled
+                                    PerformSearch(champ.name); // Force immediate search
+                                });
+                            }
+                        }
+                        else if (action["actorCellId"]?.ToString() == myCellId && action["type"] == "pick")
+                        {
+                            string champId = action["championId"]?.ToString();
+                            var champ = champions.Values.FirstOrDefault(c => c.id == champId);
+                            if (champ != null)
+                            {
+                                this.Invoke((MethodInvoker)delegate
+                                {
+                                    tbSearch.Text = champ.name;
+                                    cbSearch.Checked = false; // Ensure search is enabled
+                                    PerformSearch(champ.name); // Force immediate search
+                                });
                             }
                         }
                     }
@@ -1338,36 +1422,90 @@ namespace ChampRune
             }
             catch
             {
-                SavedItems si = new SavedItems();
-                si.size = 60;
-                si.stack = 20;
-                si.patch = "12_12";
-                si.type = 1;
-                si.rank = 5;
-                si.x = 0;
-                si.y = 0;
-                si.width = DEFAULT_WIDTH;
-                si.height = DEFAULT_HEIGHT;
-                si.region = regions[2];
-                XMLSaveData.SerializeToXml(si, Path.GetDirectoryName(workingDirectory) + @"\\save.data");
             }
+        }
+
+        private void cbRegion_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            if (!init) return;
+            UpdateSavedFile();
+            _ = SyncChampionsWithRiot();
+        }
+
+        private void btnSortDate_Click(object sender, EventArgs e)
+        {
+            isSortedNewestFirst = !isSortedNewestFirst;
+            btnSortDate.Text = isSortedNewestFirst ? "Date ↓" : "Date ↑";
+            
+            SendMessage(flpChampions.Handle, WM_SETREDRAW, false, 0);
+            flpChampions.SuspendLayout();
+
+            var sortedList = isSortedNewestFirst
+                ? champions.Values.OrderByDescending(c => c.releaseDate).ToList()
+                : champions.Values.OrderBy(c => c.releaseDate).ToList();
+
+            // Re-order controls
+            int index = 0;
+            foreach (var champ in sortedList)
+            {
+                if (champ.image != null && flpChampions.Controls.Contains(champ.image))
+                {
+                    flpChampions.Controls.SetChildIndex(champ.image, index++);
+                }
+            }
+
+            flpChampions.ResumeLayout();
+            SendMessage(flpChampions.Handle, WM_SETREDRAW, true, 0);
+            flpChampions.Refresh();
+            UpdateCountLabel();
         }
 
         private void tbSearch_TextChanged(object sender, EventArgs e)
         {
             if (!cbSearch.Checked)
             {
-                flpChampions.Visible = true;
-                flpChampions.BringToFront();
+                searchTimer.Stop();
+                searchTimer.Start();
+            }
+        }
 
-                foreach (var champ in champions.Values)
+        private void PerformSearch(string searchText = null)
+        {
+            searchTimer.Stop();
+            
+            // Freeze drawing to prevent flicker and lag
+            SendMessage(flpChampions.Handle, WM_SETREDRAW, false, 0);
+            flpChampions.SuspendLayout();
+            
+            string text = searchText ?? tbSearch.Text.ToLower();
+            bool isSearchEmpty = string.IsNullOrEmpty(text);
+
+            foreach (var champ in champions.Values)
+            {
+                bool shouldBeVisible = isSearchEmpty || champ.name.ToLower().Contains(text.ToLower());
+                if (champ.image.Visible != shouldBeVisible)
                 {
-                    bool shouldBeVisible = string.IsNullOrEmpty(tbSearch.Text) || champ.name.ToLower().Contains(tbSearch.Text.ToLower());
-                    if (champ.image.Visible != shouldBeVisible)
-                    {
-                        champ.image.Visible = shouldBeVisible;
-                    }
+                    champ.image.Visible = shouldBeVisible;
                 }
+            }
+
+            flpChampions.ResumeLayout();
+            SendMessage(flpChampions.Handle, WM_SETREDRAW, true, 0);
+            flpChampions.Refresh();
+            UpdateCountLabel();
+        }
+
+        private void SearchTimer_Tick(object sender, EventArgs e)
+        {
+            PerformSearch();
+        }
+
+        private void UpdateCountLabel()
+        {
+            if (lblCount != null && champions != null)
+            {
+                int count = champions.Values.Count(c => c.image.Visible);
+                lblCount.Text = "Total Champions: " + count.ToString();
             }
         }
 
@@ -1401,6 +1539,7 @@ namespace ChampRune
             // Re-enable drawing and force a final single paint
             SendMessage(flpChampions.Handle, WM_SETREDRAW, true, 0);
             flpChampions.Refresh();
+            UpdateCountLabel();
         }
 
 
@@ -1554,6 +1693,7 @@ namespace ChampRune
                 // Unfreeze and refresh once
                 SendMessage(flpChampions.Handle, WM_SETREDRAW, true, 0);
                 flpChampions.Refresh();
+                UpdateCountLabel();
             }
         }
 
@@ -1833,7 +1973,7 @@ namespace ChampRune
             pnWeb.Visible = true;
             pnWeb.BringToFront();
             downloadBrowser.DownloadHandler = downloadHandler;
-            downloadBrowser.Load(@"https://tutorialeu.com/wp-content/uploads/2022/02/ChampRuneV" + vers + ".7z");
+            downloadBrowser.Load(@"https://tutorialeu.ro/wp-content/uploads/2022/02/ChampRuneV" + vers + ".7z");
         }
         private void DownloadBrowser_Paint(object sender, PaintEventArgs e)
         {
@@ -1953,21 +2093,72 @@ namespace ChampRune
                             return;
                         }
 
-                        var champNameS = navigator.Select((".//span[@class='champion-name']"));
-                        champNameS.MoveNext();
-                        var champName = champNameS.Current.Value;
-                        var imageNameS = navigator.Select((".//img[@class='champion-image']"));
-                        imageNameS.MoveNext();
-                        var imageName = imageNameS.Current.OuterXml.Split('"')[3];
+                        // Robust Champion Name Extraction
+                        var champNameS = navigator.Select(".//h1[contains(@class, 'champion-header-name')] | .//span[@class='champion-name'] | .//div[contains(@class, 'champion-title')]");
+                        string champName = selectedName; // Default to selected name from search
+                        if (champNameS.MoveNext() && !string.IsNullOrEmpty(champNameS.Current.Value))
+                        {
+                            champName = champNameS.Current.Value.Trim();
+                        }
+
+                        // Robust Image URL Extraction
+                        var imageNameS = navigator.Select(".//img[contains(@class, 'champion-image')] | .//div[contains(@class, 'champion-image')]//img");
+                        string imagePathResult = "";
+                        if (imageNameS.MoveNext())
+                        {
+                            imagePathResult = imageNameS.Current.GetAttribute("src", "");
+                            if (string.IsNullOrEmpty(imagePathResult))
+                            {
+                                // Try to find any img if the specific selector fails
+                                imagePathResult = imageNameS.Current.GetAttribute("data-src", "");
+                            }
+                        }
+
+                        // Handle protocol-relative or relative URLs
+                        if (!string.IsNullOrEmpty(imagePathResult))
+                        {
+                            if (imagePathResult.StartsWith("//"))
+                                imagePathResult = "https:" + imagePathResult;
+                            else if (imagePathResult.StartsWith("/"))
+                                imagePathResult = "https://u.gg" + imagePathResult;
+                        }
+                        else
+                        {
+                            // Fallback to Data Dragon if U.GG scraping fails
+                            string formattedName = champName.Replace(" ", "").Replace("'", "");
+                            imagePathResult = $"https://ddragon.leagueoflegends.com/cdn/15.2.1/img/champion/{formattedName}.png";
+                        }
+
+                        // Try to find the already loaded image from the local champions dictionary
+                        Image champImageResult = null;
+                        this.Invoke((MethodInvoker)delegate
+                        {
+                            if (champions != null)
+                            {
+                                if (champions.ContainsKey(champName))
+                                {
+                                    champImageResult = champions[champName].image.Image;
+                                }
+                                else
+                                {
+                                    // Try case-insensitive lookup (e.g. "Katarina" vs "katarina")
+                                    var key = champions.Keys.FirstOrDefault(k => k.Equals(champName, StringComparison.OrdinalIgnoreCase));
+                                    if (key != null)
+                                    {
+                                        champImageResult = champions[key].image.Image;
+                                    }
+                                }
+                            }
+                        });
 
 
                         localRuneImporter = new RuneImporter(keyStoneRunes[0], runes[0], runes[1], runes[2], runes[3],
                         keyStoneRunes[1], runes[4], runes[5], shards[0], shards[1], shards[2], spells[0], spells[1], aram,
-                        champName, imageName, phase, new Point(this.Location.X + loc.X, this.Location.Y + loc.Y));
+                        champName, imagePathResult, phase, new Point(this.Location.X + loc.X, this.Location.Y + loc.Y), champImageResult);
                     }
                     catch (Exception ex)
                     {
-                        var FormMessage = new FormMessage("", "Exception on opening the importer: \n" + ex.Message + " \nSend this message to: support@tutorialeu.com", 0, 0).ShowDialog();
+                        var FormMessage = new FormMessage("", "Exception on opening the importer: \n" + ex.Message + " \nSend this message to: support@tutorialeu.ro", 0, 0).ShowDialog();
                         this.Invoke((MethodInvoker)delegate
                         {
                             this.runeIsOppened = false;
@@ -2371,7 +2562,7 @@ namespace ChampRune
                 "© Created by TutorialEu" +
                 "\nAll rights reserved!" +
                 "\nFor any bug and problems contact:" +
-                "\nsupport@tutorialeu.com",
+                "\nsupport@tutorialeu.ro",
                 this.Right - this.Width / 2, this.Bottom - this.Height / 2).ShowDialog();
         }
 

@@ -1,10 +1,15 @@
 ﻿using PoniLCU;
 using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.Drawing;
+using System.IO;
 using System.Linq;
+using System.Net.Http;
 using System.Runtime.InteropServices;
+using System.Threading.Tasks;
 using System.Windows.Forms;
+using Newtonsoft.Json.Linq;
 
 namespace ChampRune
 {
@@ -26,6 +31,145 @@ namespace ChampRune
         LeagueClient leagueClient;
         string imagePath;
         bool aram = false;
+
+        #region Rune ID Mappings (Data Dragon 15.2.1)
+        // Rune Tree IDs
+        private static readonly Dictionary<string, int> RuneTreeIds = new Dictionary<string, int>
+        {
+            { "Precision", 8000 },
+            { "Domination", 8100 },
+            { "Sorcery", 8200 },
+            { "Resolve", 8400 },
+            { "Inspiration", 8300 }
+        };
+
+        // Rune Name to ID mapping (key is the rune file name from U.GG)
+        private static readonly Dictionary<string, int> RuneIds = new Dictionary<string, int>(StringComparer.OrdinalIgnoreCase)
+        {
+            // Precision Keystones
+            { "PressTheAttack", 8005 },
+            { "LethalTempoTemp", 8008 },
+            { "LethalTempo", 8008 },
+            { "FleetFootwork", 8021 },
+            { "Conqueror", 8010 },
+            // Precision Tier 1
+            { "AbsorbLife", 9101 },
+            { "Overheal", 9101 }, // Old name, now is AbsorbLife
+            { "Triumph", 9111 },
+            { "PresenceOfMind", 8009 },
+            // Precision Tier 2
+            { "LegendAlacrity", 9104 },
+            { "LegendHaste", 9105 },
+            { "LegendTenacity", 9105 }, // Map old name to new equivalent
+            { "LegendBloodline", 9103 },
+            // Precision Tier 3
+            { "CoupDeGrace", 8014 },
+            { "CutDown", 8017 },
+            { "LastStand", 8299 },
+
+            // Domination Keystones
+            { "Electrocute", 8112 },
+            { "DarkHarvest", 8128 },
+            { "HailOfBlades", 9923 },
+            { "Predator", 8124 }, // Legacy, may not exist anymore
+            // Domination Tier 1
+            { "CheapShot", 8126 },
+            { "TasteOfBlood", 8139 },
+            { "SuddenImpact", 8143 },
+            // Domination Tier 2
+            { "SixthSense", 8137 },
+            { "ZombieWard", 8137 }, // Old name, now is SixthSense
+            { "GrislyMementos", 8140 },
+            { "GhostPoro", 8140 }, // Old name, now is GrislyMementos
+            { "DeepWard", 8141 },
+            { "EyeballCollection", 8141 }, // Old name, now is DeepWard
+            // Domination Tier 3
+            { "TreasureHunter", 8135 },
+            { "RelentlessHunter", 8105 },
+            { "UltimateHunter", 8106 },
+            { "IngeniousHunter", 8135 }, // Removed, map to TreasureHunter
+
+            // Sorcery Keystones
+            { "SummonAery", 8214 },
+            { "ArcaneComet", 8229 },
+            { "PhaseRush", 8230 },
+            // Sorcery Tier 1
+            { "AxiomArcanist", 8224 },
+            { "NullifyingOrb", 8224 }, // Old name, now is AxiomArcanist
+            { "ManaflowBand", 8226 },
+            { "NimbusCloak", 8275 },
+            // Sorcery Tier 2
+            { "Transcendence", 8210 },
+            { "Celerity", 8234 },
+            { "AbsoluteFocus", 8233 },
+            // Sorcery Tier 3
+            { "Scorch", 8237 },
+            { "Waterwalking", 8232 },
+            { "GatheringStorm", 8236 },
+
+            // Resolve Keystones
+            { "GraspOfTheUndying", 8437 },
+            { "Aftershock", 8439 },
+            { "Guardian", 8465 },
+            // Resolve Tier 1
+            { "Demolish", 8446 },
+            { "FontOfLife", 8463 },
+            { "ShieldBash", 8401 },
+            { "MirrorShell", 8401 }, // Old name, now is ShieldBash
+            // Resolve Tier 2
+            { "Conditioning", 8429 },
+            { "SecondWind", 8444 },
+            { "BonePlating", 8473 },
+            // Resolve Tier 3
+            { "Overgrowth", 8451 },
+            { "Revitalize", 8453 },
+            { "Unflinching", 8242 },
+
+            // Inspiration Keystones
+            { "GlacialAugment", 8351 },
+            { "UnsealedSpellbook", 8360 },
+            { "FirstStrike", 8369 },
+            { "PrototypeOmnistone", 8369 }, // Removed, map to FirstStrike
+            // Inspiration Tier 1
+            { "HextechFlashtraption", 8306 },
+            { "MagicalFootwear", 8304 },
+            { "CashBack", 8321 },
+            { "FuturesMarket", 8321 }, // Old name, now is CashBack
+            // Inspiration Tier 2
+            { "TripleTonic", 8313 },
+            { "PerfectTiming", 8313 }, // Old name, now is TripleTonic
+            { "TimeWarpTonic", 8352 },
+            { "BiscuitDelivery", 8345 },
+            { "MinionDematerializer", 8345 }, // Removed, map to BiscuitDelivery
+            // Inspiration Tier 3
+            { "CosmicInsight", 8347 },
+            { "ApproachVelocity", 8410 },
+            { "JackOfAllTrades", 8316 }
+        };
+
+        // Stat Shard IDs (the three rows at the bottom)
+        private static readonly Dictionary<string, int> StatShardIds = new Dictionary<string, int>(StringComparer.OrdinalIgnoreCase)
+        {
+            // Row 1: Offense
+            { "Adaptive Force", 5008 },
+            { "AdaptiveForce", 5008 },
+            { "Attack Speed", 5005 },
+            { "AttackSpeed", 5005 },
+            { "Ability Haste", 5007 },
+            { "AbilityHaste", 5007 },
+            { "CDR", 5007 },
+            // Row 2: Flex
+            { "Armor", 5002 },
+            { "Magic Resist", 5003 },
+            { "MagicResist", 5003 },
+            // Row 3: Defense
+            { "Health", 5001 },
+            { "HealthScaling", 5001 },
+            { "Scalling", 5001 }, // Typo in original code
+            { "Scaling Health", 5001 }
+        };
+        #endregion
+
 
         [DllImport("kernel32.dll")]
         static extern int GetProcessId(IntPtr handle);
@@ -80,6 +224,7 @@ namespace ChampRune
         }
         string phase = "";
         string oldPhase = "";
+        private Image championImage = null;
         public RuneImporter(string keyStoneTitle,
             string keyStone1,
             string keyStone2,
@@ -97,11 +242,13 @@ namespace ChampRune
             string champName,
             string imagePath,
             string phase,
-            Point formLocation
+            Point formLocation,
+            Image champImage = null
             )
         {
             InitializeComponent();
             leagueClient = new LeagueClient(LeagueClient.credentials.lockfile);
+            this.championImage = champImage;
             RuneTitle.Text = keyStoneTitle;
             ChangeTextColorByRune(keyStoneTitle, RuneTitle);
             Rune1.Text = keyStone1;
@@ -147,6 +294,136 @@ namespace ChampRune
             timer1.Stop();
             this.Close();
         }
+
+        #region API Import Methods
+        /// <summary>
+        /// Imports runes directly via the LCU API instead of using mouse clicks.
+        /// </summary>
+        private async Task<bool> ImportRunesViaAPI()
+        {
+            if (!leagueClient.IsConnected)
+            {
+                Debug.WriteLine("League client not connected for API import");
+                return false;
+            }
+
+            try
+            {
+                // Get primary and secondary tree IDs
+                if (!RuneTreeIds.TryGetValue(RuneTitle.Text, out int primaryStyleId))
+                {
+                    Debug.WriteLine($"Unknown primary rune tree: {RuneTitle.Text}");
+                    return false;
+                }
+
+                if (!RuneTreeIds.TryGetValue(SecondaryPathTitle.Text, out int subStyleId))
+                {
+                    Debug.WriteLine($"Unknown secondary rune tree: {SecondaryPathTitle.Text}");
+                    return false;
+                }
+
+                // Build the list of perk IDs (6 runes + 3 stat shards = 9 total)
+                var perkIds = new List<int>();
+
+                // Primary runes (keystone + 3 regular runes)
+                string[] primaryRunes = { Rune1.Text, Rune2.Text, Rune3.Text, Rune4.Text };
+                foreach (var runeName in primaryRunes)
+                {
+                    if (RuneIds.TryGetValue(runeName, out int runeId))
+                    {
+                        perkIds.Add(runeId);
+                    }
+                    else
+                    {
+                        Debug.WriteLine($"Unknown primary rune: {runeName}");
+                        return false;
+                    }
+                }
+
+                // Secondary runes (2 runes)
+                string[] secondaryRunes = { SecondaryPath1.Text, SecondaryPath2.Text };
+                foreach (var runeName in secondaryRunes)
+                {
+                    if (RuneIds.TryGetValue(runeName, out int runeId))
+                    {
+                        perkIds.Add(runeId);
+                    }
+                    else
+                    {
+                        Debug.WriteLine($"Unknown secondary rune: {runeName}");
+                        return false;
+                    }
+                }
+
+                // Stat shards (3 shards)
+                string[] shards = { extrarune1.Text, extrarune2.Text, extrarune3.Text };
+                foreach (var shardName in shards)
+                {
+                    if (StatShardIds.TryGetValue(shardName, out int shardId))
+                    {
+                        perkIds.Add(shardId);
+                    }
+                    else
+                    {
+                        Debug.WriteLine($"Unknown stat shard: {shardName}");
+                        return false;
+                    }
+                }
+
+                // Get current rune page
+                string pagesJson = await leagueClient.Request(LeagueClient.requestMethod.GET, "/lol-perks/v1/pages", "");
+                if (string.IsNullOrEmpty(pagesJson))
+                {
+                    Debug.WriteLine("Failed to get rune pages");
+                    return false;
+                }
+
+                var pages = JArray.Parse(pagesJson);
+
+                // Find an editable page (prefer one named 'ChampRune', otherwise any editable page)
+                var targetPage = pages.FirstOrDefault(p => p["name"]?.ToString() == "ChampRune")
+                              ?? pages.FirstOrDefault(p => (bool)(p["isDeletable"] ?? false));
+
+                if (targetPage == null)
+                {
+                    Debug.WriteLine("No editable rune page found!");
+                    return false;
+                }
+
+                int pageId = (int)targetPage["id"];
+
+                // Get champion name for the page title
+                string champNameOnly = champName.Text.Split(':')[0].Trim();
+
+                // Construct the updated page object
+                var newPage = new JObject
+                {
+                    ["name"] = "ChampRune: " + champNameOnly,
+                    ["primaryStyleId"] = primaryStyleId,
+                    ["subStyleId"] = subStyleId,
+                    ["selectedPerkIds"] = new JArray(perkIds),
+                    ["current"] = true
+                };
+
+                // Update the page via LCU PUT request
+                string response = await leagueClient.Request(
+                    LeagueClient.requestMethod.PUT,
+                    $"/lol-perks/v1/pages/{pageId}",
+                    newPage.ToString()
+                );
+
+                Debug.WriteLine($"API Import response: {response}");
+                Debug.WriteLine($"Successfully applied runes for {champNameOnly} via API");
+                return true;
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine($"Error importing runes via API: {ex.Message}");
+                return false;
+            }
+        }
+        #endregion
+
         private bool getpixelColor(int x, int y, int R, int G, int B, int spacex = 50, int spacey = 50)
         {
             //Console.WriteLine("start-----------------------------------------");
@@ -307,6 +584,48 @@ namespace ChampRune
                 {
                     return;
                 }
+            }
+
+            // Check if API import is enabled
+            if (cbAutoImportViaAPI.Checked)
+            {
+                // Try API import first
+                Task.Run(async () =>
+                {
+                    bool success = await ImportRunesViaAPI();
+                    this.Invoke((MethodInvoker)delegate
+                    {
+                        if (success)
+                        {
+                            new FormMessage("Success!",
+                                "Runes imported successfully via API!",
+                                MessageBoxButtons.OK,
+                                this.Right - 300,
+                                this.Bottom - 160).ShowDialog();
+
+                            if (cbAutoCloseAfterImport.Checked)
+                            {
+                                this.Close();
+                            }
+                        }
+                        else
+                        {
+                            var fallbackResult = new FormMessage("API Import Failed",
+                                "Failed to import runes via API. Would you like to try mouse clicks instead?",
+                                MessageBoxButtons.YesNo,
+                                this.Right - 300,
+                                this.Bottom - 160).ShowDialog();
+
+                            if (fallbackResult == DialogResult.Yes)
+                            {
+                                // Uncheck the API checkbox and recursively call Import_Click
+                                cbAutoImportViaAPI.Checked = false;
+                                Import_Click(sender, e);
+                            }
+                        }
+                    });
+                });
+                return;
             }
 
             InterceptKeys.OnKeyDown += new KeyEventHandler(externalKeyDown);
@@ -833,7 +1152,13 @@ namespace ChampRune
 
         private void UpdateNameAndPhase()
         {
-            this.champName.Text = champName.Text.Split(':')[0] + ": " + (string.IsNullOrEmpty(phase) ? "Unknown" : phase);
+            string baseName = champName.Text.Split(':')[0].Trim();
+            string status = phase;
+            if (string.IsNullOrEmpty(status))
+            {
+                status = leagueClient.IsConnected ? "Connected" : "Disconnected";
+            }
+            this.champName.Text = baseName + ": " + status;
             this.champName.Location = new Point(this.pbChampion.Right - this.champName.Width, this.champName.Location.Y);
         }
         private void timer1_Tick(object sender, EventArgs e)
@@ -864,23 +1189,90 @@ namespace ChampRune
             }
         }
 
-        private void RuneImporter_Load(object sender, EventArgs e)
+        private async void RuneImporter_Load(object sender, EventArgs e)
         {
             try
             {
-                if (imagePath.Split('.').Last().ToLower() == "webp")
+                // Prioritize the image passed from the main form
+                if (this.championImage != null)
                 {
-                    //imagePath = imagePath.Replace("/", "_");
-                    //imagePath = imagePath.Split('.')[0].Split('_').Last();
-                    imagePath = imagePath.Remove(imagePath.Count() - 4) + "png";
+                    if (this.pbChampion.Image != null) this.pbChampion.Image.Dispose();
+                    this.pbChampion.Image = new Bitmap(this.championImage);
+                    timer1.Start();
+                    return;
                 }
-                this.pbChampion.LoadAsync(imagePath);
+
+                bool loaded = false;
+                if (!string.IsNullOrEmpty(imagePath))
+                {
+                    // Try to use png version if it's webp
+                    string targetPath = imagePath;
+                    if (targetPath.EndsWith(".webp", StringComparison.OrdinalIgnoreCase))
+                    {
+                        targetPath = targetPath.Substring(0, targetPath.Length - 5) + ".png";
+                    }
+
+                    loaded = await LoadImageWithUserAgent(targetPath);
+                    if (!loaded && targetPath != imagePath)
+                    {
+                        loaded = await LoadImageWithUserAgent(imagePath);
+                    }
+                }
+
+                if (!loaded)
+                {
+                    // Fallback to Data Dragon if imagePath is empty or loading failed
+                    string nameOnly = champName.Text.Split(':')[0].Trim();
+                    string formattedName = nameOnly.Replace(" ", "").Replace("'", "");
+                    await LoadImageWithUserAgent($"https://ddragon.leagueoflegends.com/cdn/15.2.1/img/champion/{formattedName}.png");
+                }
                 timer1.Start();
             }
             catch (Exception ex)
             {
-                Console.WriteLine(this.Name + " can't import image. Error message: " + ex.Message);
+                Debug.WriteLine(this.Name + " can't import image. Error message: " + ex.Message);
             }
+        }
+
+        /// <summary>
+        /// Loads an image from a URL using HttpClient to include a User-Agent header,
+        /// bypassing 403 Forbidden errors from CDNs.
+        /// </summary>
+        private async Task<bool> LoadImageWithUserAgent(string url)
+        {
+            if (string.IsNullOrEmpty(url)) return false;
+
+            try
+            {
+                using (HttpClient client = new HttpClient())
+                {
+                    client.DefaultRequestHeaders.Add("User-Agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/119.0.0.0 Safari/537.36");
+                    
+                    var response = await client.GetAsync(url);
+                    if (response.IsSuccessStatusCode)
+                    {
+                        using (var stream = await response.Content.ReadAsStreamAsync())
+                        {
+                            // Create a copy of the image to avoid stream-related issues
+                            using (Image tempImage = Image.FromStream(stream))
+                            {
+                                if (this.pbChampion.Image != null) this.pbChampion.Image.Dispose();
+                                this.pbChampion.Image = new Bitmap(tempImage);
+                                return true;
+                            }
+                        }
+                    }
+                    else
+                    {
+                        Debug.WriteLine($"Failed to download image from {url}. Status: {response.StatusCode}");
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine($"Error in LoadImageWithUserAgent for {url}: {ex.Message}");
+            }
+            return false;
         }
         public const int WM_NCLBUTTONDOWN = 0xA1;
         public const int HT_CAPTION = 0x2;

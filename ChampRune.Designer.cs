@@ -98,6 +98,9 @@ namespace ChampRune
             this.nudPatch1 = new System.Windows.Forms.NumericUpDown();
             this.nudPatch2 = new System.Windows.Forms.NumericUpDown();
             this.btnCounter = new System.Windows.Forms.Button();
+            this.btnSortDate = new System.Windows.Forms.Button();
+            this.btnSortDate = new System.Windows.Forms.Button();
+            this.lblCount = new System.Windows.Forms.Label();
             this.ttCounterPick = new System.Windows.Forms.ToolTip(this.components);
             this.cbSearch = new System.Windows.Forms.CheckBox();
             this.lblTopWin = new System.Windows.Forms.Label();
@@ -111,10 +114,10 @@ namespace ChampRune
             // 
             // tbSearch
             // 
-            this.tbSearch.Font = new System.Drawing.Font("Reem Kufi", 8.25F);
-            this.tbSearch.Location = new System.Drawing.Point(238, 2);
+            this.tbSearch.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F);
+            this.tbSearch.Location = new System.Drawing.Point(293, 2);
             this.tbSearch.Name = "tbSearch";
-            this.tbSearch.Size = new System.Drawing.Size(132, 28);
+            this.tbSearch.Size = new System.Drawing.Size(76, 20);
             this.tbSearch.TabIndex = 1;
             this.tbSearch.Click += new System.EventHandler(this.tbSearch_Click);
             this.tbSearch.TextChanged += new System.EventHandler(this.tbSearch_TextChanged);
@@ -199,17 +202,17 @@ namespace ChampRune
             // 
             this.lblPatck.AutoSize = true;
             this.lblPatck.BackColor = System.Drawing.Color.Transparent;
-            this.lblPatck.Font = new System.Drawing.Font("Reem Kufi", 12F);
+            this.lblPatck.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F);
             this.lblPatck.Location = new System.Drawing.Point(398, 32);
             this.lblPatck.Name = "lblPatck";
-            this.lblPatck.Size = new System.Drawing.Size(57, 30);
+            this.lblPatck.Size = new System.Drawing.Size(54, 20);
             this.lblPatck.TabIndex = 120;
             this.lblPatck.Text = "Patch:";
             this.lblPatck.MouseDown += new System.Windows.Forms.MouseEventHandler(this.lblPatck_MouseDown);
             // 
             // nudStack
             // 
-            this.nudStack.Font = new System.Drawing.Font("Reem Kufi", 8.25F);
+            this.nudStack.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F);
             this.nudStack.Location = new System.Drawing.Point(447, 1);
             this.nudStack.Maximum = new decimal(new int[] {
             31,
@@ -224,7 +227,7 @@ namespace ChampRune
             this.nudStack.Name = "nudStack";
             this.nudStack.ReadOnly = true;
             this.nudStack.RightToLeft = System.Windows.Forms.RightToLeft.No;
-            this.nudStack.Size = new System.Drawing.Size(34, 28);
+            this.nudStack.Size = new System.Drawing.Size(34, 20);
             this.nudStack.TabIndex = 30;
             this.nudStack.Value = new decimal(new int[] {
             20,
@@ -237,20 +240,20 @@ namespace ChampRune
             // 
             this.lblSize.AutoSize = true;
             this.lblSize.BackColor = System.Drawing.Color.Transparent;
-            this.lblSize.Font = new System.Drawing.Font("Reem Kufi", 12F);
+            this.lblSize.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F);
             this.lblSize.Location = new System.Drawing.Point(370, -1);
             this.lblSize.Name = "lblSize";
-            this.lblSize.Size = new System.Drawing.Size(45, 30);
+            this.lblSize.Size = new System.Drawing.Size(44, 20);
             this.lblSize.TabIndex = 31;
             this.lblSize.Text = "Size:";
             this.lblSize.MouseDown += new System.Windows.Forms.MouseEventHandler(this.lblSize_MouseDown);
             // 
             // tbSize
             // 
-            this.tbSize.Font = new System.Drawing.Font("Reem Kufi", 8.25F);
+            this.tbSize.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F);
             this.tbSize.Location = new System.Drawing.Point(412, 1);
             this.tbSize.Name = "tbSize";
-            this.tbSize.Size = new System.Drawing.Size(30, 28);
+            this.tbSize.Size = new System.Drawing.Size(30, 20);
             this.tbSize.TabIndex = 31;
             this.tbSize.TextChanged += new System.EventHandler(this.tbSize_TextChanged);
             this.tbSize.KeyDown += new System.Windows.Forms.KeyEventHandler(this.tbSize_KeyDown);
@@ -271,12 +274,12 @@ namespace ChampRune
             // 
             // lblText
             // 
-            this.lblText.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.lblText.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.lblText.AutoSize = true;
-            this.lblText.Font = new System.Drawing.Font("Reem Kufi", 12F);
+            this.lblText.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F);
             this.lblText.Location = new System.Drawing.Point(779, 0);
             this.lblText.Name = "lblText";
-            this.lblText.Size = new System.Drawing.Size(0, 30);
+            this.lblText.Size = new System.Drawing.Size(0, 20);
             this.lblText.TabIndex = 0;
             // 
             // btnItems
@@ -291,7 +294,7 @@ namespace ChampRune
             // 
             // btnRune
             // 
-            this.btnRune.Font = new System.Drawing.Font("Reem Kufi", 8.25F);
+            this.btnRune.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F);
             this.btnRune.Location = new System.Drawing.Point(520, 2);
             this.btnRune.Name = "btnRune";
             this.btnRune.Size = new System.Drawing.Size(59, 30);
@@ -304,7 +307,7 @@ namespace ChampRune
             // 
             this.cbTopWin.AutoSize = true;
             this.cbTopWin.BackColor = System.Drawing.Color.Transparent;
-            this.cbTopWin.Font = new System.Drawing.Font("Reem Kufi", 9.749999F);
+            this.cbTopWin.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.749999F);
             this.cbTopWin.Location = new System.Drawing.Point(158, 40);
             this.cbTopWin.Name = "cbTopWin";
             this.cbTopWin.Size = new System.Drawing.Size(15, 14);
@@ -316,7 +319,7 @@ namespace ChampRune
             // btnClearCache
             // 
             this.btnClearCache.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.btnClearCache.Font = new System.Drawing.Font("Reem Kufi", 8.25F);
+            this.btnClearCache.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F);
             this.btnClearCache.Location = new System.Drawing.Point(687, 34);
             this.btnClearCache.Name = "btnClearCache";
             this.btnClearCache.Size = new System.Drawing.Size(80, 27);
@@ -328,7 +331,7 @@ namespace ChampRune
             // btnUpdate
             // 
             this.btnUpdate.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.btnUpdate.Font = new System.Drawing.Font("Reem Kufi", 8.25F);
+            this.btnUpdate.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F);
             this.btnUpdate.Location = new System.Drawing.Point(767, 34);
             this.btnUpdate.Name = "btnUpdate";
             this.btnUpdate.Size = new System.Drawing.Size(79, 27);
@@ -339,7 +342,7 @@ namespace ChampRune
             // 
             // btnUpdateRune
             // 
-            this.btnUpdateRune.Font = new System.Drawing.Font("Reem Kufi", 8.999999F);
+            this.btnUpdateRune.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.999999F);
             this.btnUpdateRune.Location = new System.Drawing.Point(580, 5);
             this.btnUpdateRune.Name = "btnUpdateRune";
             this.btnUpdateRune.Size = new System.Drawing.Size(99, 54);
@@ -347,6 +350,18 @@ namespace ChampRune
             this.btnUpdateRune.Text = "Auto Import Runes / Spells";
             this.btnUpdateRune.UseVisualStyleBackColor = true;
             this.btnUpdateRune.Click += new System.EventHandler(this.btnUpdateRune_Click_1);
+            // 
+            // lblCount
+            // 
+            this.lblCount.AutoSize = true;
+            this.lblCount.BackColor = System.Drawing.Color.Transparent;
+            this.lblCount.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F);
+            this.lblCount.ForeColor = System.Drawing.SystemColors.ControlText;
+            this.lblCount.Location = new System.Drawing.Point(682, 22);
+            this.lblCount.Name = "lblCount";
+            this.lblCount.Size = new System.Drawing.Size(40, 15);
+            this.lblCount.TabIndex = 145;
+            this.lblCount.Text = "Total Champions: 0";
             // 
             // btnMinimize
             // 
@@ -400,7 +415,7 @@ namespace ChampRune
             // btnTheme
             // 
             this.btnTheme.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.btnTheme.Font = new System.Drawing.Font("Reem Kufi", 8.25F);
+            this.btnTheme.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F);
             this.btnTheme.Location = new System.Drawing.Point(846, 34);
             this.btnTheme.Name = "btnTheme";
             this.btnTheme.Size = new System.Drawing.Size(54, 27);
@@ -435,14 +450,14 @@ namespace ChampRune
             this.tsmiRankedFlex,
             this.tsmiNormalBlind,
             this.tsmiNormalDraft});
-            this.tsmiType.Font = new System.Drawing.Font("Reem Kufi", 8.25F);
+            this.tsmiType.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F);
             this.tsmiType.ForeColor = System.Drawing.Color.Black;
             this.tsmiType.Image = global::ChampRune.Properties.Resources.Normal_Draft;
             this.tsmiType.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
             this.tsmiType.MergeAction = System.Windows.Forms.MergeAction.Replace;
             this.tsmiType.Name = "tsmiType";
             this.tsmiType.Padding = new System.Windows.Forms.Padding(0);
-            this.tsmiType.Size = new System.Drawing.Size(159, 25);
+            this.tsmiType.Size = new System.Drawing.Size(159, 20);
             this.tsmiType.Text = "Ranked Solo";
             this.tsmiType.TextImageRelation = System.Windows.Forms.TextImageRelation.Overlay;
             this.tsmiType.DropDownClosed += new System.EventHandler(this.tsmiType_DropDownClosed);
@@ -469,7 +484,7 @@ namespace ChampRune
             this.tsmiIronS});
             this.tsmiRankedSolo.Image = global::ChampRune.Properties.Resources.Normal_Draft;
             this.tsmiRankedSolo.Name = "tsmiRankedSolo";
-            this.tsmiRankedSolo.Size = new System.Drawing.Size(146, 26);
+            this.tsmiRankedSolo.Size = new System.Drawing.Size(136, 22);
             this.tsmiRankedSolo.Tag = "0";
             this.tsmiRankedSolo.Text = "Ranked Solo";
             this.tsmiRankedSolo.Click += new System.EventHandler(this.tsmiRankedSolo_Click);
@@ -478,7 +493,7 @@ namespace ChampRune
             // 
             this.tsmiPlatinumPlusS.Image = global::ChampRune.Properties.Resources.Emblem_Platinum_Plus;
             this.tsmiPlatinumPlusS.Name = "tsmiPlatinumPlusS";
-            this.tsmiPlatinumPlusS.Size = new System.Drawing.Size(147, 26);
+            this.tsmiPlatinumPlusS.Size = new System.Drawing.Size(134, 22);
             this.tsmiPlatinumPlusS.Tag = "0";
             this.tsmiPlatinumPlusS.Text = "Platinum +";
             this.tsmiPlatinumPlusS.Click += new System.EventHandler(this.tsmiPlatinumPlusS_Click);
@@ -487,7 +502,7 @@ namespace ChampRune
             // 
             this.tsmiDiamondPlusS.Image = global::ChampRune.Properties.Resources.Emblem_Diamond_Plus;
             this.tsmiDiamondPlusS.Name = "tsmiDiamondPlusS";
-            this.tsmiDiamondPlusS.Size = new System.Drawing.Size(147, 26);
+            this.tsmiDiamondPlusS.Size = new System.Drawing.Size(134, 22);
             this.tsmiDiamondPlusS.Tag = "1";
             this.tsmiDiamondPlusS.Text = "Diamond +";
             this.tsmiDiamondPlusS.Click += new System.EventHandler(this.tsmiDiamondPlusS_Click);
@@ -496,7 +511,7 @@ namespace ChampRune
             // 
             this.tsmiDiamond2PlusS.Image = global::ChampRune.Properties.Resources.Emblem_Diamond_2_Plus;
             this.tsmiDiamond2PlusS.Name = "tsmiDiamond2PlusS";
-            this.tsmiDiamond2PlusS.Size = new System.Drawing.Size(147, 26);
+            this.tsmiDiamond2PlusS.Size = new System.Drawing.Size(134, 22);
             this.tsmiDiamond2PlusS.Tag = "2";
             this.tsmiDiamond2PlusS.Text = "Diamond 2+";
             this.tsmiDiamond2PlusS.Click += new System.EventHandler(this.tsmiDiamond2PlusS_Click);
@@ -505,7 +520,7 @@ namespace ChampRune
             // 
             this.tsmiMasterPlusS.Image = global::ChampRune.Properties.Resources.Emblem_Master_Plus;
             this.tsmiMasterPlusS.Name = "tsmiMasterPlusS";
-            this.tsmiMasterPlusS.Size = new System.Drawing.Size(147, 26);
+            this.tsmiMasterPlusS.Size = new System.Drawing.Size(134, 22);
             this.tsmiMasterPlusS.Tag = "3";
             this.tsmiMasterPlusS.Text = "Master +";
             this.tsmiMasterPlusS.Click += new System.EventHandler(this.tsmiMasterPlusS_Click);
@@ -513,13 +528,13 @@ namespace ChampRune
             // toolStripSeparator1
             // 
             this.toolStripSeparator1.Name = "toolStripSeparator1";
-            this.toolStripSeparator1.Size = new System.Drawing.Size(144, 6);
+            this.toolStripSeparator1.Size = new System.Drawing.Size(131, 6);
             // 
             // tsmiAllRanksS
             // 
             this.tsmiAllRanksS.Image = global::ChampRune.Properties.Resources.All_Ranks;
             this.tsmiAllRanksS.Name = "tsmiAllRanksS";
-            this.tsmiAllRanksS.Size = new System.Drawing.Size(147, 26);
+            this.tsmiAllRanksS.Size = new System.Drawing.Size(134, 22);
             this.tsmiAllRanksS.Tag = "5";
             this.tsmiAllRanksS.Text = "All Ranks";
             this.tsmiAllRanksS.Click += new System.EventHandler(this.tsmiAllRanksS_Click);
@@ -527,13 +542,13 @@ namespace ChampRune
             // toolStripSeparator8
             // 
             this.toolStripSeparator8.Name = "toolStripSeparator8";
-            this.toolStripSeparator8.Size = new System.Drawing.Size(144, 6);
+            this.toolStripSeparator8.Size = new System.Drawing.Size(131, 6);
             // 
             // tsmiChallengerS
             // 
             this.tsmiChallengerS.Image = global::ChampRune.Properties.Resources.Emblem_Challenger;
             this.tsmiChallengerS.Name = "tsmiChallengerS";
-            this.tsmiChallengerS.Size = new System.Drawing.Size(147, 26);
+            this.tsmiChallengerS.Size = new System.Drawing.Size(134, 22);
             this.tsmiChallengerS.Tag = "7";
             this.tsmiChallengerS.Text = "Challenger";
             this.tsmiChallengerS.Click += new System.EventHandler(this.tsmiChallengerS_Click);
@@ -542,7 +557,7 @@ namespace ChampRune
             // 
             this.tsmiGrandmasterS.Image = global::ChampRune.Properties.Resources.Emblem_Grandmaster;
             this.tsmiGrandmasterS.Name = "tsmiGrandmasterS";
-            this.tsmiGrandmasterS.Size = new System.Drawing.Size(147, 26);
+            this.tsmiGrandmasterS.Size = new System.Drawing.Size(134, 22);
             this.tsmiGrandmasterS.Tag = "8";
             this.tsmiGrandmasterS.Text = "Grandmaster";
             this.tsmiGrandmasterS.Click += new System.EventHandler(this.tsmiGrandmasterS_Click);
@@ -551,7 +566,7 @@ namespace ChampRune
             // 
             this.tsmiMasterS.Image = global::ChampRune.Properties.Resources.Emblem_Master;
             this.tsmiMasterS.Name = "tsmiMasterS";
-            this.tsmiMasterS.Size = new System.Drawing.Size(147, 26);
+            this.tsmiMasterS.Size = new System.Drawing.Size(134, 22);
             this.tsmiMasterS.Tag = "9";
             this.tsmiMasterS.Text = "Master";
             this.tsmiMasterS.Click += new System.EventHandler(this.tsmiMasterS_Click);
@@ -560,7 +575,7 @@ namespace ChampRune
             // 
             this.tsmiDiamondS.Image = global::ChampRune.Properties.Resources.Emblem_Diamond;
             this.tsmiDiamondS.Name = "tsmiDiamondS";
-            this.tsmiDiamondS.Size = new System.Drawing.Size(147, 26);
+            this.tsmiDiamondS.Size = new System.Drawing.Size(134, 22);
             this.tsmiDiamondS.Tag = "10";
             this.tsmiDiamondS.Text = "Diamond";
             this.tsmiDiamondS.Click += new System.EventHandler(this.tsmiDiamondS_Click);
@@ -569,7 +584,7 @@ namespace ChampRune
             // 
             this.tsmiPlatinumS.Image = global::ChampRune.Properties.Resources.Emblem_Platinum;
             this.tsmiPlatinumS.Name = "tsmiPlatinumS";
-            this.tsmiPlatinumS.Size = new System.Drawing.Size(147, 26);
+            this.tsmiPlatinumS.Size = new System.Drawing.Size(134, 22);
             this.tsmiPlatinumS.Tag = "11";
             this.tsmiPlatinumS.Text = "Platinum";
             this.tsmiPlatinumS.Click += new System.EventHandler(this.tsmiPlatinumS_Click);
@@ -578,7 +593,7 @@ namespace ChampRune
             // 
             this.tsmiGoldS.Image = global::ChampRune.Properties.Resources.Emblem_Gold;
             this.tsmiGoldS.Name = "tsmiGoldS";
-            this.tsmiGoldS.Size = new System.Drawing.Size(147, 26);
+            this.tsmiGoldS.Size = new System.Drawing.Size(134, 22);
             this.tsmiGoldS.Tag = "12";
             this.tsmiGoldS.Text = "Gold";
             this.tsmiGoldS.Click += new System.EventHandler(this.tsmiGoldS_Click);
@@ -587,7 +602,7 @@ namespace ChampRune
             // 
             this.tsmiSilverS.Image = global::ChampRune.Properties.Resources.Emblem_Silver;
             this.tsmiSilverS.Name = "tsmiSilverS";
-            this.tsmiSilverS.Size = new System.Drawing.Size(147, 26);
+            this.tsmiSilverS.Size = new System.Drawing.Size(134, 22);
             this.tsmiSilverS.Tag = "13";
             this.tsmiSilverS.Text = "Silver";
             this.tsmiSilverS.Click += new System.EventHandler(this.tsmiSilverS_Click);
@@ -596,7 +611,7 @@ namespace ChampRune
             // 
             this.tsmiBronzeS.Image = global::ChampRune.Properties.Resources.Emblem_Bronze;
             this.tsmiBronzeS.Name = "tsmiBronzeS";
-            this.tsmiBronzeS.Size = new System.Drawing.Size(147, 26);
+            this.tsmiBronzeS.Size = new System.Drawing.Size(134, 22);
             this.tsmiBronzeS.Tag = "14";
             this.tsmiBronzeS.Text = "Bronze";
             this.tsmiBronzeS.Click += new System.EventHandler(this.tsmiBronzeS_Click);
@@ -605,7 +620,7 @@ namespace ChampRune
             // 
             this.tsmiIronS.Image = global::ChampRune.Properties.Resources.Emblem_Iron;
             this.tsmiIronS.Name = "tsmiIronS";
-            this.tsmiIronS.Size = new System.Drawing.Size(147, 26);
+            this.tsmiIronS.Size = new System.Drawing.Size(134, 22);
             this.tsmiIronS.Tag = "15";
             this.tsmiIronS.Text = "Iron";
             this.tsmiIronS.Click += new System.EventHandler(this.tsmiIronS_Click);
@@ -615,7 +630,7 @@ namespace ChampRune
             this.tsmiAram.CheckOnClick = true;
             this.tsmiAram.Image = global::ChampRune.Properties.Resources.ARAM;
             this.tsmiAram.Name = "tsmiAram";
-            this.tsmiAram.Size = new System.Drawing.Size(146, 26);
+            this.tsmiAram.Size = new System.Drawing.Size(136, 22);
             this.tsmiAram.Tag = "1";
             this.tsmiAram.Text = "ARAM";
             this.tsmiAram.Click += new System.EventHandler(this.aRAMToolStripMenuItem_Click);
@@ -642,7 +657,7 @@ namespace ChampRune
             this.tsmiIronF});
             this.tsmiRankedFlex.Image = global::ChampRune.Properties.Resources.Ranked_Solo;
             this.tsmiRankedFlex.Name = "tsmiRankedFlex";
-            this.tsmiRankedFlex.Size = new System.Drawing.Size(146, 26);
+            this.tsmiRankedFlex.Size = new System.Drawing.Size(136, 22);
             this.tsmiRankedFlex.Tag = "2";
             this.tsmiRankedFlex.Text = "Ranked Flex";
             this.tsmiRankedFlex.Click += new System.EventHandler(this.toolStripMenuItem1_Click);
@@ -651,7 +666,7 @@ namespace ChampRune
             // 
             this.tsmiPlatinumPlusF.Image = global::ChampRune.Properties.Resources.Emblem_Platinum_Plus;
             this.tsmiPlatinumPlusF.Name = "tsmiPlatinumPlusF";
-            this.tsmiPlatinumPlusF.Size = new System.Drawing.Size(147, 26);
+            this.tsmiPlatinumPlusF.Size = new System.Drawing.Size(134, 22);
             this.tsmiPlatinumPlusF.Tag = "0";
             this.tsmiPlatinumPlusF.Text = "Platinum +";
             this.tsmiPlatinumPlusF.Click += new System.EventHandler(this.tsmiPlatinumPlusF_Click);
@@ -660,7 +675,7 @@ namespace ChampRune
             // 
             this.tsmiDiamondPlusF.Image = global::ChampRune.Properties.Resources.Emblem_Diamond_Plus;
             this.tsmiDiamondPlusF.Name = "tsmiDiamondPlusF";
-            this.tsmiDiamondPlusF.Size = new System.Drawing.Size(147, 26);
+            this.tsmiDiamondPlusF.Size = new System.Drawing.Size(134, 22);
             this.tsmiDiamondPlusF.Tag = "1";
             this.tsmiDiamondPlusF.Text = "Diamond +";
             this.tsmiDiamondPlusF.Click += new System.EventHandler(this.tsmiDiamondPlusF_Click);
@@ -669,7 +684,7 @@ namespace ChampRune
             // 
             this.tsmiDiamond2PlusF.Image = global::ChampRune.Properties.Resources.Emblem_Diamond_2_Plus;
             this.tsmiDiamond2PlusF.Name = "tsmiDiamond2PlusF";
-            this.tsmiDiamond2PlusF.Size = new System.Drawing.Size(147, 26);
+            this.tsmiDiamond2PlusF.Size = new System.Drawing.Size(134, 22);
             this.tsmiDiamond2PlusF.Tag = "2";
             this.tsmiDiamond2PlusF.Text = "Diamond 2+";
             this.tsmiDiamond2PlusF.Click += new System.EventHandler(this.tsmiDiamond2PlusF_Click);
@@ -678,7 +693,7 @@ namespace ChampRune
             // 
             this.tsmiMasterPlusF.Image = global::ChampRune.Properties.Resources.Emblem_Master_Plus;
             this.tsmiMasterPlusF.Name = "tsmiMasterPlusF";
-            this.tsmiMasterPlusF.Size = new System.Drawing.Size(147, 26);
+            this.tsmiMasterPlusF.Size = new System.Drawing.Size(134, 22);
             this.tsmiMasterPlusF.Tag = "3";
             this.tsmiMasterPlusF.Text = "Master +";
             this.tsmiMasterPlusF.Click += new System.EventHandler(this.tsmiMasterPlusF_Click);
@@ -686,13 +701,13 @@ namespace ChampRune
             // toolStripSeparator2
             // 
             this.toolStripSeparator2.Name = "toolStripSeparator2";
-            this.toolStripSeparator2.Size = new System.Drawing.Size(144, 6);
+            this.toolStripSeparator2.Size = new System.Drawing.Size(131, 6);
             // 
             // tsmiAllRanksF
             // 
             this.tsmiAllRanksF.Image = global::ChampRune.Properties.Resources.All_Ranks;
             this.tsmiAllRanksF.Name = "tsmiAllRanksF";
-            this.tsmiAllRanksF.Size = new System.Drawing.Size(147, 26);
+            this.tsmiAllRanksF.Size = new System.Drawing.Size(134, 22);
             this.tsmiAllRanksF.Tag = "5";
             this.tsmiAllRanksF.Text = "All Ranks";
             this.tsmiAllRanksF.Click += new System.EventHandler(this.tsmiAllRanksF_Click);
@@ -700,13 +715,13 @@ namespace ChampRune
             // toolStripSeparator9
             // 
             this.toolStripSeparator9.Name = "toolStripSeparator9";
-            this.toolStripSeparator9.Size = new System.Drawing.Size(144, 6);
+            this.toolStripSeparator9.Size = new System.Drawing.Size(131, 6);
             // 
             // tsmiChallengerF
             // 
             this.tsmiChallengerF.Image = global::ChampRune.Properties.Resources.Emblem_Challenger;
             this.tsmiChallengerF.Name = "tsmiChallengerF";
-            this.tsmiChallengerF.Size = new System.Drawing.Size(147, 26);
+            this.tsmiChallengerF.Size = new System.Drawing.Size(134, 22);
             this.tsmiChallengerF.Tag = "7";
             this.tsmiChallengerF.Text = "Challenger";
             this.tsmiChallengerF.Click += new System.EventHandler(this.tsmiChallengerF_Click);
@@ -715,7 +730,7 @@ namespace ChampRune
             // 
             this.tsmiGrandmasterF.Image = global::ChampRune.Properties.Resources.Emblem_Grandmaster;
             this.tsmiGrandmasterF.Name = "tsmiGrandmasterF";
-            this.tsmiGrandmasterF.Size = new System.Drawing.Size(147, 26);
+            this.tsmiGrandmasterF.Size = new System.Drawing.Size(134, 22);
             this.tsmiGrandmasterF.Tag = "8";
             this.tsmiGrandmasterF.Text = "Grandmaster";
             this.tsmiGrandmasterF.Click += new System.EventHandler(this.tsmiGrandmasterF_Click);
@@ -724,7 +739,7 @@ namespace ChampRune
             // 
             this.tsmiMasterF.Image = global::ChampRune.Properties.Resources.Emblem_Master;
             this.tsmiMasterF.Name = "tsmiMasterF";
-            this.tsmiMasterF.Size = new System.Drawing.Size(147, 26);
+            this.tsmiMasterF.Size = new System.Drawing.Size(134, 22);
             this.tsmiMasterF.Tag = "9";
             this.tsmiMasterF.Text = "Master";
             this.tsmiMasterF.Click += new System.EventHandler(this.tsmiMasterF_Click);
@@ -733,7 +748,7 @@ namespace ChampRune
             // 
             this.tsmiDiamondF.Image = global::ChampRune.Properties.Resources.Emblem_Diamond;
             this.tsmiDiamondF.Name = "tsmiDiamondF";
-            this.tsmiDiamondF.Size = new System.Drawing.Size(147, 26);
+            this.tsmiDiamondF.Size = new System.Drawing.Size(134, 22);
             this.tsmiDiamondF.Tag = "10";
             this.tsmiDiamondF.Text = "Diamond";
             this.tsmiDiamondF.Click += new System.EventHandler(this.tsmiDiamondF_Click);
@@ -742,7 +757,7 @@ namespace ChampRune
             // 
             this.tsmiPlatinumF.Image = global::ChampRune.Properties.Resources.Emblem_Platinum;
             this.tsmiPlatinumF.Name = "tsmiPlatinumF";
-            this.tsmiPlatinumF.Size = new System.Drawing.Size(147, 26);
+            this.tsmiPlatinumF.Size = new System.Drawing.Size(134, 22);
             this.tsmiPlatinumF.Tag = "11";
             this.tsmiPlatinumF.Text = "Platinum";
             this.tsmiPlatinumF.Click += new System.EventHandler(this.tsmiPlatinumF_Click);
@@ -751,7 +766,7 @@ namespace ChampRune
             // 
             this.tsmiGoldF.Image = global::ChampRune.Properties.Resources.Emblem_Gold;
             this.tsmiGoldF.Name = "tsmiGoldF";
-            this.tsmiGoldF.Size = new System.Drawing.Size(147, 26);
+            this.tsmiGoldF.Size = new System.Drawing.Size(134, 22);
             this.tsmiGoldF.Tag = "12";
             this.tsmiGoldF.Text = "Gold";
             this.tsmiGoldF.Click += new System.EventHandler(this.tsmiGoldF_Click);
@@ -760,7 +775,7 @@ namespace ChampRune
             // 
             this.tsmiSilverF.Image = global::ChampRune.Properties.Resources.Emblem_Silver;
             this.tsmiSilverF.Name = "tsmiSilverF";
-            this.tsmiSilverF.Size = new System.Drawing.Size(147, 26);
+            this.tsmiSilverF.Size = new System.Drawing.Size(134, 22);
             this.tsmiSilverF.Tag = "13";
             this.tsmiSilverF.Text = "Silver";
             this.tsmiSilverF.Click += new System.EventHandler(this.tsmiSilverF_Click);
@@ -769,7 +784,7 @@ namespace ChampRune
             // 
             this.tsmiBronzeF.Image = global::ChampRune.Properties.Resources.Emblem_Bronze;
             this.tsmiBronzeF.Name = "tsmiBronzeF";
-            this.tsmiBronzeF.Size = new System.Drawing.Size(147, 26);
+            this.tsmiBronzeF.Size = new System.Drawing.Size(134, 22);
             this.tsmiBronzeF.Tag = "14";
             this.tsmiBronzeF.Text = "Bronze";
             this.tsmiBronzeF.Click += new System.EventHandler(this.tsmiBronzeF_Click);
@@ -778,7 +793,7 @@ namespace ChampRune
             // 
             this.tsmiIronF.Image = global::ChampRune.Properties.Resources.Emblem_Iron;
             this.tsmiIronF.Name = "tsmiIronF";
-            this.tsmiIronF.Size = new System.Drawing.Size(147, 26);
+            this.tsmiIronF.Size = new System.Drawing.Size(134, 22);
             this.tsmiIronF.Tag = "15";
             this.tsmiIronF.Text = "Iron";
             this.tsmiIronF.Click += new System.EventHandler(this.tsmiIronF_Click);
@@ -788,7 +803,7 @@ namespace ChampRune
             this.tsmiNormalBlind.CheckOnClick = true;
             this.tsmiNormalBlind.Image = global::ChampRune.Properties.Resources.Normal_Blind;
             this.tsmiNormalBlind.Name = "tsmiNormalBlind";
-            this.tsmiNormalBlind.Size = new System.Drawing.Size(146, 26);
+            this.tsmiNormalBlind.Size = new System.Drawing.Size(136, 22);
             this.tsmiNormalBlind.Tag = "3";
             this.tsmiNormalBlind.Text = "Normal Blind";
             this.tsmiNormalBlind.Click += new System.EventHandler(this.normalBlindToolStripMenuItem_Click);
@@ -798,7 +813,7 @@ namespace ChampRune
             this.tsmiNormalDraft.CheckOnClick = true;
             this.tsmiNormalDraft.Image = global::ChampRune.Properties.Resources.Ranked_Solo;
             this.tsmiNormalDraft.Name = "tsmiNormalDraft";
-            this.tsmiNormalDraft.Size = new System.Drawing.Size(146, 26);
+            this.tsmiNormalDraft.Size = new System.Drawing.Size(136, 22);
             this.tsmiNormalDraft.Tag = "4";
             this.tsmiNormalDraft.Text = "Normal Draft";
             this.tsmiNormalDraft.Click += new System.EventHandler(this.normalDraftToolStripMenuItem_Click);
@@ -808,10 +823,10 @@ namespace ChampRune
             this.lblPhase.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.lblPhase.AutoSize = true;
             this.lblPhase.BackColor = System.Drawing.Color.Transparent;
-            this.lblPhase.Font = new System.Drawing.Font("Reem Kufi", 9.749999F);
+            this.lblPhase.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.749999F);
             this.lblPhase.Location = new System.Drawing.Point(682, 6);
             this.lblPhase.Name = "lblPhase";
-            this.lblPhase.Size = new System.Drawing.Size(91, 25);
+            this.lblPhase.Size = new System.Drawing.Size(89, 16);
             this.lblPhase.TabIndex = 132;
             this.lblPhase.Text = "Phase: Offline";
             this.lblPhase.MouseDown += new System.Windows.Forms.MouseEventHandler(this.lblPhase_MouseDown);
@@ -819,7 +834,7 @@ namespace ChampRune
             // btnAbout
             // 
             this.btnAbout.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.btnAbout.Font = new System.Drawing.Font("Reem Kufi", 8.25F);
+            this.btnAbout.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F);
             this.btnAbout.Location = new System.Drawing.Point(900, 34);
             this.btnAbout.Name = "btnAbout";
             this.btnAbout.Size = new System.Drawing.Size(54, 27);
@@ -830,13 +845,8 @@ namespace ChampRune
             // 
             // nudPatch1
             // 
-            this.nudPatch1.Font = new System.Drawing.Font("Reem Kufi", 8.25F);
+            this.nudPatch1.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F);
             this.nudPatch1.Location = new System.Drawing.Point(451, 33);
-            this.nudPatch1.Maximum = new decimal(new int[] {
-            40,
-            0,
-            0,
-            0});
             this.nudPatch1.Minimum = new decimal(new int[] {
             1,
             0,
@@ -845,7 +855,7 @@ namespace ChampRune
             this.nudPatch1.Name = "nudPatch1";
             this.nudPatch1.ReadOnly = true;
             this.nudPatch1.RightToLeft = System.Windows.Forms.RightToLeft.No;
-            this.nudPatch1.Size = new System.Drawing.Size(34, 28);
+            this.nudPatch1.Size = new System.Drawing.Size(34, 20);
             this.nudPatch1.TabIndex = 134;
             this.nudPatch1.Value = new decimal(new int[] {
             12,
@@ -856,13 +866,8 @@ namespace ChampRune
             // 
             // nudPatch2
             // 
-            this.nudPatch2.Font = new System.Drawing.Font("Reem Kufi", 8.25F);
+            this.nudPatch2.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F);
             this.nudPatch2.Location = new System.Drawing.Point(484, 33);
-            this.nudPatch2.Maximum = new decimal(new int[] {
-            40,
-            0,
-            0,
-            0});
             this.nudPatch2.Minimum = new decimal(new int[] {
             1,
             0,
@@ -871,7 +876,7 @@ namespace ChampRune
             this.nudPatch2.Name = "nudPatch2";
             this.nudPatch2.ReadOnly = true;
             this.nudPatch2.RightToLeft = System.Windows.Forms.RightToLeft.No;
-            this.nudPatch2.Size = new System.Drawing.Size(34, 28);
+            this.nudPatch2.Size = new System.Drawing.Size(34, 20);
             this.nudPatch2.TabIndex = 135;
             this.nudPatch2.Value = new decimal(new int[] {
             4,
@@ -891,12 +896,23 @@ namespace ChampRune
             this.btnCounter.Click += new System.EventHandler(this.btnCounter_Click);
             this.btnCounter.MouseHover += new System.EventHandler(this.button1_MouseHover);
             // 
+            // btnSortDate
+            // 
+            this.btnSortDate.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F);
+            this.btnSortDate.Location = new System.Drawing.Point(163, 2);
+            this.btnSortDate.Name = "btnSortDate";
+            this.btnSortDate.Size = new System.Drawing.Size(50, 30);
+            this.btnSortDate.TabIndex = 9;
+            this.btnSortDate.Text = "Date";
+            this.btnSortDate.UseVisualStyleBackColor = true;
+            this.btnSortDate.Click += new System.EventHandler(this.btnSortDate_Click);
+            // 
             // cbSearch
             // 
             this.cbSearch.AutoSize = true;
             this.cbSearch.BackColor = System.Drawing.Color.Transparent;
-            this.cbSearch.Font = new System.Drawing.Font("Reem Kufi", 11.25F);
-            this.cbSearch.Location = new System.Drawing.Point(222, 10);
+            this.cbSearch.Font = new System.Drawing.Font("Microsoft Sans Serif", 11.25F);
+            this.cbSearch.Location = new System.Drawing.Point(277, 10);
             this.cbSearch.Name = "cbSearch";
             this.cbSearch.Size = new System.Drawing.Size(15, 14);
             this.cbSearch.TabIndex = 137;
@@ -908,10 +924,10 @@ namespace ChampRune
             // 
             this.lblTopWin.AutoSize = true;
             this.lblTopWin.BackColor = System.Drawing.Color.Transparent;
-            this.lblTopWin.Font = new System.Drawing.Font("Reem Kufi", 9F);
+            this.lblTopWin.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F);
             this.lblTopWin.Location = new System.Drawing.Point(168, 35);
             this.lblTopWin.Name = "lblTopWin";
-            this.lblTopWin.Size = new System.Drawing.Size(71, 23);
+            this.lblTopWin.Size = new System.Drawing.Size(68, 15);
             this.lblTopWin.TabIndex = 138;
             this.lblTopWin.Text = "TopWinList";
             this.lblTopWin.MouseDown += new System.Windows.Forms.MouseEventHandler(this.lblTopWin_MouseDown);
@@ -920,10 +936,10 @@ namespace ChampRune
             // 
             this.lblSearch.AutoSize = true;
             this.lblSearch.BackColor = System.Drawing.Color.Transparent;
-            this.lblSearch.Font = new System.Drawing.Font("Reem Kufi", 11.25F);
-            this.lblSearch.Location = new System.Drawing.Point(163, 2);
+            this.lblSearch.Font = new System.Drawing.Font("Microsoft Sans Serif", 11.25F);
+            this.lblSearch.Location = new System.Drawing.Point(218, 2);
             this.lblSearch.Name = "lblSearch";
-            this.lblSearch.Size = new System.Drawing.Size(62, 28);
+            this.lblSearch.Size = new System.Drawing.Size(59, 18);
             this.lblSearch.TabIndex = 139;
             this.lblSearch.Text = "Search:";
             this.lblSearch.MouseDown += new System.Windows.Forms.MouseEventHandler(this.lblSearch_MouseDown_1);
@@ -949,8 +965,9 @@ namespace ChampRune
             "LAS"});
             this.cbRegion.Location = new System.Drawing.Point(807, 1);
             this.cbRegion.Name = "cbRegion";
-            this.cbRegion.Size = new System.Drawing.Size(50, 29);
+            this.cbRegion.Size = new System.Drawing.Size(50, 21);
             this.cbRegion.TabIndex = 140;
+            this.cbRegion.SelectedIndexChanged += new System.EventHandler(this.cbRegion_SelectedIndexChanged);
             // 
             // frmMain
             // 
@@ -993,9 +1010,11 @@ namespace ChampRune
             this.Controls.Add(this.btnJun);
             this.Controls.Add(this.btnAdc);
             this.Controls.Add(this.btnMid);
+            this.Controls.Add(this.lblCount);
+            this.Controls.Add(this.btnSortDate);
             this.Controls.Add(this.btnTop);
             this.DoubleBuffered = true;
-            this.Font = new System.Drawing.Font("Reem Kufi", 8.25F);
+            this.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F);
             this.HelpButton = true;
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.ImeMode = System.Windows.Forms.ImeMode.Off;
@@ -1085,12 +1104,13 @@ namespace ChampRune
         public System.Windows.Forms.NumericUpDown nudPatch1;
         public System.Windows.Forms.NumericUpDown nudPatch2;
         private System.Windows.Forms.Button btnCounter;
+        private System.Windows.Forms.Button btnSortDate;
         private System.Windows.Forms.ToolTip ttCounterPick;
         public System.Windows.Forms.CheckBox cbSearch;
         private System.Windows.Forms.Label lblTopWin;
         private System.Windows.Forms.Label lblSearch;
         public System.Windows.Forms.ComboBox cbRegion;
+        private System.Windows.Forms.Label lblCount;
         public System.Windows.Forms.Label lblText;
     }
 }
-

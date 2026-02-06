@@ -140,7 +140,7 @@ namespace ChampRune
             this.llLinks.Size = new System.Drawing.Size(117, 21);
             this.llLinks.TabIndex = 128;
             this.llLinks.TabStop = true;
-            this.llLinks.Text = "https://tutorialeu.com";
+            this.llLinks.Text = "https://tutorialeu.ro";
             this.llLinks.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.llLinks_LinkClicked);
             // 
             // FormMessage

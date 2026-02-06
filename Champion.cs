@@ -1,4 +1,5 @@
-﻿using System.Windows.Forms;
+﻿using System;
+using System.Windows.Forms;
 
 namespace ChampRune
 {
@@ -9,5 +10,6 @@ namespace ChampRune
 
         public string imagePath { get; set; }
         public PictureBox image { get; set; }
+        public DateTime releaseDate { get; set; }
     }
 }
