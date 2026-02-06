@@ -3,7 +3,9 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Drawing;
+using System.IO;
 using System.Linq;
+using System.Net.Http;
 using System.Runtime.InteropServices;
 using System.Threading.Tasks;
 using System.Windows.Forms;
@@ -222,6 +224,7 @@ namespace ChampRune
         }
         string phase = "";
         string oldPhase = "";
+        private Image championImage = null;
         public RuneImporter(string keyStoneTitle,
             string keyStone1,
             string keyStone2,
@@ -239,11 +242,13 @@ namespace ChampRune
             string champName,
             string imagePath,
             string phase,
-            Point formLocation
+            Point formLocation,
+            Image champImage = null
             )
         {
             InitializeComponent();
             leagueClient = new LeagueClient(LeagueClient.credentials.lockfile);
+            this.championImage = champImage;
             RuneTitle.Text = keyStoneTitle;
             ChangeTextColorByRune(keyStoneTitle, RuneTitle);
             Rune1.Text = keyStone1;
@@ -1147,7 +1152,13 @@ namespace ChampRune
 
         private void UpdateNameAndPhase()
         {
-            this.champName.Text = champName.Text.Split(':')[0] + ": " + (string.IsNullOrEmpty(phase) ? "Unknown" : phase);
+            string baseName = champName.Text.Split(':')[0].Trim();
+            string status = phase;
+            if (string.IsNullOrEmpty(status))
+            {
+                status = leagueClient.IsConnected ? "Connected" : "Disconnected";
+            }
+            this.champName.Text = baseName + ": " + status;
             this.champName.Location = new Point(this.pbChampion.Right - this.champName.Width, this.champName.Location.Y);
         }
         private void timer1_Tick(object sender, EventArgs e)
@@ -1178,23 +1189,90 @@ namespace ChampRune
             }
         }
 
-        private void RuneImporter_Load(object sender, EventArgs e)
+        private async void RuneImporter_Load(object sender, EventArgs e)
         {
             try
             {
-                if (imagePath.Split('.').Last().ToLower() == "webp")
+                // Prioritize the image passed from the main form
+                if (this.championImage != null)
                 {
-                    //imagePath = imagePath.Replace("/", "_");
-                    //imagePath = imagePath.Split('.')[0].Split('_').Last();
-                    imagePath = imagePath.Remove(imagePath.Count() - 4) + "png";
+                    if (this.pbChampion.Image != null) this.pbChampion.Image.Dispose();
+                    this.pbChampion.Image = new Bitmap(this.championImage);
+                    timer1.Start();
+                    return;
                 }
-                this.pbChampion.LoadAsync(imagePath);
+
+                bool loaded = false;
+                if (!string.IsNullOrEmpty(imagePath))
+                {
+                    // Try to use png version if it's webp
+                    string targetPath = imagePath;
+                    if (targetPath.EndsWith(".webp", StringComparison.OrdinalIgnoreCase))
+                    {
+                        targetPath = targetPath.Substring(0, targetPath.Length - 5) + ".png";
+                    }
+
+                    loaded = await LoadImageWithUserAgent(targetPath);
+                    if (!loaded && targetPath != imagePath)
+                    {
+                        loaded = await LoadImageWithUserAgent(imagePath);
+                    }
+                }
+
+                if (!loaded)
+                {
+                    // Fallback to Data Dragon if imagePath is empty or loading failed
+                    string nameOnly = champName.Text.Split(':')[0].Trim();
+                    string formattedName = nameOnly.Replace(" ", "").Replace("'", "");
+                    await LoadImageWithUserAgent($"https://ddragon.leagueoflegends.com/cdn/15.2.1/img/champion/{formattedName}.png");
+                }
                 timer1.Start();
             }
             catch (Exception ex)
             {
-                Console.WriteLine(this.Name + " can't import image. Error message: " + ex.Message);
+                Debug.WriteLine(this.Name + " can't import image. Error message: " + ex.Message);
             }
+        }
+
+        /// <summary>
+        /// Loads an image from a URL using HttpClient to include a User-Agent header,
+        /// bypassing 403 Forbidden errors from CDNs.
+        /// </summary>
+        private async Task<bool> LoadImageWithUserAgent(string url)
+        {
+            if (string.IsNullOrEmpty(url)) return false;
+
+            try
+            {
+                using (HttpClient client = new HttpClient())
+                {
+                    client.DefaultRequestHeaders.Add("User-Agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/119.0.0.0 Safari/537.36");
+                    
+                    var response = await client.GetAsync(url);
+                    if (response.IsSuccessStatusCode)
+                    {
+                        using (var stream = await response.Content.ReadAsStreamAsync())
+                        {
+                            // Create a copy of the image to avoid stream-related issues
+                            using (Image tempImage = Image.FromStream(stream))
+                            {
+                                if (this.pbChampion.Image != null) this.pbChampion.Image.Dispose();
+                                this.pbChampion.Image = new Bitmap(tempImage);
+                                return true;
+                            }
+                        }
+                    }
+                    else
+                    {
+                        Debug.WriteLine($"Failed to download image from {url}. Status: {response.StatusCode}");
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine($"Error in LoadImageWithUserAgent for {url}: {ex.Message}");
+            }
+            return false;
         }
         public const int WM_NCLBUTTONDOWN = 0xA1;
         public const int HT_CAPTION = 0x2;

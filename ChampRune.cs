@@ -2093,17 +2093,68 @@ namespace ChampRune
                             return;
                         }
 
-                        var champNameS = navigator.Select((".//span[@class='champion-name']"));
-                        champNameS.MoveNext();
-                        var champName = champNameS.Current.Value;
-                        var imageNameS = navigator.Select((".//img[@class='champion-image']"));
-                        imageNameS.MoveNext();
-                        var imageName = imageNameS.Current.OuterXml.Split('"')[3];
+                        // Robust Champion Name Extraction
+                        var champNameS = navigator.Select(".//h1[contains(@class, 'champion-header-name')] | .//span[@class='champion-name'] | .//div[contains(@class, 'champion-title')]");
+                        string champName = selectedName; // Default to selected name from search
+                        if (champNameS.MoveNext() && !string.IsNullOrEmpty(champNameS.Current.Value))
+                        {
+                            champName = champNameS.Current.Value.Trim();
+                        }
+
+                        // Robust Image URL Extraction
+                        var imageNameS = navigator.Select(".//img[contains(@class, 'champion-image')] | .//div[contains(@class, 'champion-image')]//img");
+                        string imagePathResult = "";
+                        if (imageNameS.MoveNext())
+                        {
+                            imagePathResult = imageNameS.Current.GetAttribute("src", "");
+                            if (string.IsNullOrEmpty(imagePathResult))
+                            {
+                                // Try to find any img if the specific selector fails
+                                imagePathResult = imageNameS.Current.GetAttribute("data-src", "");
+                            }
+                        }
+
+                        // Handle protocol-relative or relative URLs
+                        if (!string.IsNullOrEmpty(imagePathResult))
+                        {
+                            if (imagePathResult.StartsWith("//"))
+                                imagePathResult = "https:" + imagePathResult;
+                            else if (imagePathResult.StartsWith("/"))
+                                imagePathResult = "https://u.gg" + imagePathResult;
+                        }
+                        else
+                        {
+                            // Fallback to Data Dragon if U.GG scraping fails
+                            string formattedName = champName.Replace(" ", "").Replace("'", "");
+                            imagePathResult = $"https://ddragon.leagueoflegends.com/cdn/15.2.1/img/champion/{formattedName}.png";
+                        }
+
+                        // Try to find the already loaded image from the local champions dictionary
+                        Image champImageResult = null;
+                        this.Invoke((MethodInvoker)delegate
+                        {
+                            if (champions != null)
+                            {
+                                if (champions.ContainsKey(champName))
+                                {
+                                    champImageResult = champions[champName].image.Image;
+                                }
+                                else
+                                {
+                                    // Try case-insensitive lookup (e.g. "Katarina" vs "katarina")
+                                    var key = champions.Keys.FirstOrDefault(k => k.Equals(champName, StringComparison.OrdinalIgnoreCase));
+                                    if (key != null)
+                                    {
+                                        champImageResult = champions[key].image.Image;
+                                    }
+                                }
+                            }
+                        });
 
 
                         localRuneImporter = new RuneImporter(keyStoneRunes[0], runes[0], runes[1], runes[2], runes[3],
                         keyStoneRunes[1], runes[4], runes[5], shards[0], shards[1], shards[2], spells[0], spells[1], aram,
-                        champName, imageName, phase, new Point(this.Location.X + loc.X, this.Location.Y + loc.Y));
+                        champName, imagePathResult, phase, new Point(this.Location.X + loc.X, this.Location.Y + loc.Y), champImageResult);
                     }
                     catch (Exception ex)
                     {
