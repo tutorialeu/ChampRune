@@ -1430,6 +1430,7 @@ namespace ChampRune
             flpChampions.ResumeLayout();
             SendMessage(flpChampions.Handle, WM_SETREDRAW, true, 0);
             flpChampions.Refresh();
+            UpdateCountLabel();
         }
 
         private void tbSearch_TextChanged(object sender, EventArgs e)
@@ -1464,6 +1465,16 @@ namespace ChampRune
             flpChampions.ResumeLayout();
             SendMessage(flpChampions.Handle, WM_SETREDRAW, true, 0);
             flpChampions.Refresh();
+            UpdateCountLabel();
+        }
+
+        private void UpdateCountLabel()
+        {
+            if (lblCount != null && champions != null)
+            {
+                int count = champions.Values.Count(c => c.image.Visible);
+                lblCount.Text = "Total Champions: " + count.ToString();
+            }
         }
 
         private void btnSearch_Click(object sender, EventArgs e)
@@ -1496,6 +1507,7 @@ namespace ChampRune
             // Re-enable drawing and force a final single paint
             SendMessage(flpChampions.Handle, WM_SETREDRAW, true, 0);
             flpChampions.Refresh();
+            UpdateCountLabel();
         }
 
 
@@ -1649,6 +1661,7 @@ namespace ChampRune
                 // Unfreeze and refresh once
                 SendMessage(flpChampions.Handle, WM_SETREDRAW, true, 0);
                 flpChampions.Refresh();
+                UpdateCountLabel();
             }
         }
 

@@ -99,6 +99,8 @@ namespace ChampRune
             this.nudPatch2 = new System.Windows.Forms.NumericUpDown();
             this.btnCounter = new System.Windows.Forms.Button();
             this.btnSortDate = new System.Windows.Forms.Button();
+            this.btnSortDate = new System.Windows.Forms.Button();
+            this.lblCount = new System.Windows.Forms.Label();
             this.ttCounterPick = new System.Windows.Forms.ToolTip(this.components);
             this.cbSearch = new System.Windows.Forms.CheckBox();
             this.lblTopWin = new System.Windows.Forms.Label();
@@ -348,6 +350,18 @@ namespace ChampRune
             this.btnUpdateRune.Text = "Auto Import Runes / Spells";
             this.btnUpdateRune.UseVisualStyleBackColor = true;
             this.btnUpdateRune.Click += new System.EventHandler(this.btnUpdateRune_Click_1);
+            // 
+            // lblCount
+            // 
+            this.lblCount.AutoSize = true;
+            this.lblCount.BackColor = System.Drawing.Color.Transparent;
+            this.lblCount.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F);
+            this.lblCount.ForeColor = System.Drawing.SystemColors.ControlText;
+            this.lblCount.Location = new System.Drawing.Point(682, 22);
+            this.lblCount.Name = "lblCount";
+            this.lblCount.Size = new System.Drawing.Size(40, 15);
+            this.lblCount.TabIndex = 145;
+            this.lblCount.Text = "Total Champions: 0";
             // 
             // btnMinimize
             // 
@@ -996,6 +1010,7 @@ namespace ChampRune
             this.Controls.Add(this.btnJun);
             this.Controls.Add(this.btnAdc);
             this.Controls.Add(this.btnMid);
+            this.Controls.Add(this.lblCount);
             this.Controls.Add(this.btnSortDate);
             this.Controls.Add(this.btnTop);
             this.DoubleBuffered = true;
@@ -1095,7 +1110,7 @@ namespace ChampRune
         private System.Windows.Forms.Label lblTopWin;
         private System.Windows.Forms.Label lblSearch;
         public System.Windows.Forms.ComboBox cbRegion;
+        private System.Windows.Forms.Label lblCount;
         public System.Windows.Forms.Label lblText;
     }
 }
-
