@@ -8,7 +8,7 @@ using System.Runtime.InteropServices;
 [assembly: AssemblyTitle("ChampRune")]
 [assembly: AssemblyDescription("App that use u.gg to auto import runes")]
 [assembly: AssemblyConfiguration("")]
-[assembly: AssemblyCompany("tutorialeu.com")]
+[assembly: AssemblyCompany("tutorialeu.ro")]
 [assembly: AssemblyProduct("ChampRune")]
 [assembly: AssemblyCopyright("Copyright © 2021-2022")]
 [assembly: AssemblyTrademark("")]

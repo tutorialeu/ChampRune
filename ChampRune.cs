@@ -58,6 +58,7 @@ namespace ChampRune
         ThemeSelector themeSelector;
         RuneImporter runeImporter;
         bool runeIsOppened = false;
+        private bool isSortedNewestFirst = false; // Default is Oldest First (Ascending)
         private FlowLayoutPanel flpChampions;
         private PictureBox lastHighlightedChamp;
         private System.Windows.Forms.Timer searchTimer;
@@ -1404,6 +1405,33 @@ namespace ChampRune
             _ = SyncChampionsWithRiot();
         }
 
+        private void btnSortDate_Click(object sender, EventArgs e)
+        {
+            isSortedNewestFirst = !isSortedNewestFirst;
+            btnSortDate.Text = isSortedNewestFirst ? "Date ↓" : "Date ↑";
+            
+            SendMessage(flpChampions.Handle, WM_SETREDRAW, false, 0);
+            flpChampions.SuspendLayout();
+
+            var sortedList = isSortedNewestFirst
+                ? champions.Values.OrderByDescending(c => c.releaseDate).ToList()
+                : champions.Values.OrderBy(c => c.releaseDate).ToList();
+
+            // Re-order controls
+            int index = 0;
+            foreach (var champ in sortedList)
+            {
+                if (champ.image != null && flpChampions.Controls.Contains(champ.image))
+                {
+                    flpChampions.Controls.SetChildIndex(champ.image, index++);
+                }
+            }
+
+            flpChampions.ResumeLayout();
+            SendMessage(flpChampions.Handle, WM_SETREDRAW, true, 0);
+            flpChampions.Refresh();
+        }
+
         private void tbSearch_TextChanged(object sender, EventArgs e)
         {
             if (!cbSearch.Checked)
@@ -1900,7 +1928,7 @@ namespace ChampRune
             pnWeb.Visible = true;
             pnWeb.BringToFront();
             downloadBrowser.DownloadHandler = downloadHandler;
-            downloadBrowser.Load(@"https://tutorialeu.com/wp-content/uploads/2022/02/ChampRuneV" + vers + ".7z");
+            downloadBrowser.Load(@"https://tutorialeu.ro/wp-content/uploads/2022/02/ChampRuneV" + vers + ".7z");
         }
         private void DownloadBrowser_Paint(object sender, PaintEventArgs e)
         {
@@ -2034,7 +2062,7 @@ namespace ChampRune
                     }
                     catch (Exception ex)
                     {
-                        var FormMessage = new FormMessage("", "Exception on opening the importer: \n" + ex.Message + " \nSend this message to: support@tutorialeu.com", 0, 0).ShowDialog();
+                        var FormMessage = new FormMessage("", "Exception on opening the importer: \n" + ex.Message + " \nSend this message to: support@tutorialeu.ro", 0, 0).ShowDialog();
                         this.Invoke((MethodInvoker)delegate
                         {
                             this.runeIsOppened = false;
@@ -2438,7 +2466,7 @@ namespace ChampRune
                 "© Created by TutorialEu" +
                 "\nAll rights reserved!" +
                 "\nFor any bug and problems contact:" +
-                "\nsupport@tutorialeu.com",
+                "\nsupport@tutorialeu.ro",
                 this.Right - this.Width / 2, this.Bottom - this.Height / 2).ShowDialog();
         }
 
