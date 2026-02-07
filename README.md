@@ -55,4 +55,6 @@ ChampRune bridges the gap between web-based data and your game client:
 -   **YouTube**: [TutorialEu YouTube](https://youtube.com/tutorialeu)
 
 ---
-*Disclaimer: ChampRune is not endorsed by Riot Games and doesn't reflect the views or opinions of Riot Games or anyone officially involved in producing or managing League of Legends.*
+## Legal Disclaimer
+
+ChampRune isn't endorsed by Riot Games and doesn't reflect the views or opinions of Riot Games or anyone officially involved in producing or managing Riot Games properties. Riot Games, and all associated properties are trademarks or registered trademarks of Riot Games, Inc.
